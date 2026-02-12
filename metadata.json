@@ -1,0 +1,7 @@
+{
+  "name": "PSI Federal - Banking Operations Simulation",
+  "description": "A high-fidelity banking operations and fraud detection simulation system for cybersecurity education. Features synthetic customer lifecycles, KYC workflows, and automated fraud analysis.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

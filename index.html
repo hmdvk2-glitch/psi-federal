@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSI Federal | Institutional Banking Power</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* PRIMARY BRAND */
+            --psi-primary: #0B2E4F;        /* PSI Federal Navy */
+            --psi-primary-dark: #071F36;
+            --psi-primary-light: #174A7C;
+
+            /* SECONDARY */
+            --psi-secondary: #2E6F95;
+            --psi-accent: #3BB3C3;
+
+            /* BACKGROUNDS */
+            --psi-bg-main: #FFFFFF;
+            --psi-bg-alt: #F4F7FB;
+            --psi-bg-section: #E9EEF5;
+
+            /* TEXT */
+            --psi-text-primary: #0A1C2E;
+            --psi-text-secondary: #4A5D73;
+            --psi-text-muted: #7E8DA1;
+
+            /* STATUS */
+            --psi-success: #2E9E6F;
+            --psi-warning: #F2A900;
+            --psi-error: #D64545;
+            
+            /* GRADIENTS */
+            --psi-gradient-hero: linear-gradient(90deg, rgba(11,46,79,0.95) 0%, rgba(11,46,79,0.75) 50%, rgba(11,46,79,0.0) 100%);
+            --psi-gradient-cta: linear-gradient(135deg, #0B2E4F 0%, #174A7C 100%);
+            
+            /* RADIUS */
+            --psi-radius-sm: 4px;
+            --psi-radius-md: 8px;
+            --psi-radius-lg: 12px;
+            --psi-radius-xl: 20px;
+            --psi-radius-hero: 60px;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--psi-bg-alt);
+            color: var(--psi-text-primary);
+            overflow-x: hidden;
+        }
+
+        .font-mono { font-family: 'Source Code Pro', monospace; }
+        
+        .bg-psi-navy { background-color: var(--psi-primary); }
+        .text-psi-navy { color: var(--psi-primary); }
+        .border-psi-navy { border-color: var(--psi-primary); }
+        .bg-psi-success { background-color: var(--psi-success); }
+        
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .hero-wash { background: var(--psi-gradient-hero); }
+        .cta-gradient { background: var(--psi-gradient-cta); }
+        
+        /* Institutional Softness */
+        .rounded-psi { border-radius: var(--psi-radius-xl); }
+        .rounded-psi-lg { border-radius: 40px; }
+        .rounded-psi-hero { border-radius: var(--psi-radius-hero); }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "recharts": "https://esm.sh/recharts@^3.7.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0"
+  }
+}
+</script>
+</head>
+<body>
+    <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
