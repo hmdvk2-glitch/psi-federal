@@ -1,14 +1,14 @@
 
 import React from 'react';
 import { Customer, Account, Transaction } from '../types';
-import { 
-  Wallet, 
-  ArrowUpRight, 
-  ArrowDownLeft, 
-  Send, 
-  CreditCard, 
-  Search, 
-  Bell, 
+import {
+  Wallet,
+  ArrowUpRight,
+  ArrowDownLeft,
+  Send,
+  CreditCard,
+  Search,
+  Bell,
   Plus,
   ShieldCheck,
   ChevronRight
@@ -29,7 +29,16 @@ const MemberPortal: React.FC<MemberPortalProps> = ({ customer, accounts, transac
       {/* Top Profile Header */}
       <div className="flex justify-between items-center bg-white p-8 rounded-[40px] shadow-sm border border-slate-100">
         <div className="flex items-center gap-6">
-          <img src={customer.metadata.avatar} className="w-20 h-20 rounded-[32px] object-cover border-4 border-slate-50 shadow-sm" alt="Profile" />
+          <div className="relative group">
+            {customer.photo ? (
+              <img src={customer.photo} className="w-20 h-20 rounded-[32px] object-cover border-4 border-slate-50 shadow-sm" alt="Profile" />
+            ) : (
+              <img src={customer.metadata.avatar} className="w-20 h-20 rounded-[32px] object-cover border-4 border-slate-50 shadow-sm" alt="Default Avatar" />
+            )}
+            <div className="absolute inset-0 rounded-[32px] bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition cursor-help">
+              <Camera size={20} className="text-white" />
+            </div>
+          </div>
           <div>
             <h2 className="text-3xl font-black text-psi-navy tracking-tighter">Welcome back, {customer.name.split(' ')[0]}</h2>
             <p className="text-slate-500 font-medium flex items-center gap-2">
@@ -38,8 +47,8 @@ const MemberPortal: React.FC<MemberPortalProps> = ({ customer, accounts, transac
           </div>
         </div>
         <div className="flex gap-4">
-           <button className="p-4 bg-slate-50 text-slate-400 rounded-2xl hover:text-psi-navy transition"><Bell size={24} /></button>
-           <button className="p-4 bg-slate-50 text-slate-400 rounded-2xl hover:text-psi-navy transition"><Search size={24} /></button>
+          <button className="p-4 bg-slate-50 text-slate-400 rounded-2xl hover:text-psi-navy transition"><Bell size={24} /></button>
+          <button className="p-4 bg-slate-50 text-slate-400 rounded-2xl hover:text-psi-navy transition"><Search size={24} /></button>
         </div>
       </div>
 
@@ -52,38 +61,38 @@ const MemberPortal: React.FC<MemberPortalProps> = ({ customer, accounts, transac
               <button className="text-sm font-black text-psi-navy hover:underline">View All</button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-               {accounts.map(acc => (
-                 <div key={acc.id} className="bg-[#0B2E4F] rounded-[40px] p-8 text-white relative overflow-hidden group shadow-2xl hover:scale-[1.02] transition-transform">
-                   <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-[40px] -mr-16 -mt-16"></div>
-                   <div className="relative z-10 flex flex-col h-full justify-between gap-12">
-                     <div className="flex justify-between items-start">
-                       <div>
-                         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-300">{acc.type}</p>
-                         <p className="text-xs text-white/40 mt-1">•••• {acc.accountNumber.slice(-4)}</p>
-                       </div>
-                       <CreditCard size={24} className="text-white/20" />
-                     </div>
-                     <div>
-                       <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1">Available Balance</p>
-                       <p className="text-4xl font-black tracking-tighter">${acc.balance.toLocaleString()}</p>
-                     </div>
-                   </div>
-                 </div>
-               ))}
-               <button className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-[40px] flex flex-col items-center justify-center p-8 text-slate-400 hover:border-psi-navy/30 hover:text-psi-navy transition">
-                 <Plus size={32} />
-                 <span className="font-black uppercase text-xs tracking-widest mt-2">Open New Account</span>
-               </button>
+              {accounts.map(acc => (
+                <div key={acc.id} className="bg-[#0B2E4F] rounded-[40px] p-8 text-white relative overflow-hidden group shadow-2xl hover:scale-[1.02] transition-transform">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-[40px] -mr-16 -mt-16"></div>
+                  <div className="relative z-10 flex flex-col h-full justify-between gap-12">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-300">{acc.type}</p>
+                        <p className="text-xs text-white/40 mt-1">•••• {acc.accountNumber.slice(-4)}</p>
+                      </div>
+                      <CreditCard size={24} className="text-white/20" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1">Available Balance</p>
+                      <p className="text-4xl font-black tracking-tighter">${acc.balance.toLocaleString()}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <button className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-[40px] flex flex-col items-center justify-center p-8 text-slate-400 hover:border-psi-navy/30 hover:text-psi-navy transition">
+                <Plus size={32} />
+                <span className="font-black uppercase text-xs tracking-widest mt-2">Open New Account</span>
+              </button>
             </div>
           </section>
 
           <section className="bg-white p-8 rounded-[40px] shadow-sm border border-slate-100">
             <h3 className="text-xl font-black text-psi-navy tracking-tight uppercase mb-8">Quick Actions</h3>
             <div className="grid grid-cols-4 gap-4">
-               <QuickAction icon={<Send />} label="Send" />
-               <QuickAction icon={<Wallet />} label="Pay Bill" />
-               <QuickAction icon={<ArrowUpRight />} label="Invest" />
-               <QuickAction icon={<ArrowDownLeft />} label="Deposit" />
+              <QuickAction icon={<Send />} label="Send" />
+              <QuickAction icon={<Wallet />} label="Pay Bill" />
+              <QuickAction icon={<ArrowUpRight />} label="Invest" />
+              <QuickAction icon={<ArrowDownLeft />} label="Deposit" />
             </div>
           </section>
         </div>
@@ -93,26 +102,37 @@ const MemberPortal: React.FC<MemberPortalProps> = ({ customer, accounts, transac
           <section className="bg-white p-8 rounded-[40px] shadow-sm border border-slate-100">
             <h3 className="text-xl font-black text-psi-navy tracking-tight uppercase mb-8">Recent Activity</h3>
             <div className="space-y-6">
-               {recentTxns.length === 0 ? (
-                 <p className="text-sm text-slate-400 text-center py-10">No recent transactions.</p>
-               ) : (
-                 recentTxns.map(txn => (
-                   <div key={txn.id} className="flex items-center justify-between group cursor-pointer">
-                      <div className="flex items-center gap-4">
-                        <div className={`p-3 rounded-2xl ${txn.amount < 0 ? 'bg-red-50 text-red-500' : 'bg-emerald-50 text-emerald-500'}`}>
-                           {txn.amount < 0 ? <ArrowUpRight size={18} /> : <ArrowDownLeft size={18} />}
+              {recentTxns.length === 0 ? (
+                <p className="text-sm text-slate-400 text-center py-10">No recent transactions.</p>
+              ) : (
+                recentTxns.map((txn: any) => (
+                  <div key={txn.id} className="bg-slate-50/50 p-4 rounded-3xl border border-transparent hover:border-slate-100 transition group cursor-pointer relative">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-xl ${txn.amount < 0 ? 'bg-red-50 text-red-500' : 'bg-emerald-50 text-emerald-500'}`}>
+                          {txn.amount < 0 ? <ArrowUpRight size={16} /> : <ArrowDownLeft size={16} />}
                         </div>
                         <div>
-                          <p className="text-sm font-black text-psi-navy group-hover:underline">{txn.description}</p>
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{txn.type}</p>
+                          <p className="text-xs font-black text-psi-navy">{txn.description}</p>
+                          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{new Date(txn.date).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</p>
                         </div>
                       </div>
                       <p className={`text-sm font-black ${txn.amount < 0 ? 'text-slate-900' : 'text-[#2E9E6F]'}`}>
                         {txn.amount < 0 ? '-' : '+'}${Math.abs(txn.amount).toLocaleString()}
                       </p>
-                   </div>
-                 ))
-               )}
+                    </div>
+
+                    <div className="pt-3 border-t border-slate-100 flex justify-between items-center text-[9px] font-bold uppercase tracking-tighter">
+                      <div className="text-slate-400">
+                        ID: <span className="text-psi-navy select-all">{txn.transactionId || txn.id.slice(0, 8)}</span>
+                      </div>
+                      <div className="text-slate-400">
+                        From: <span className="text-psi-navy font-black">{txn.senderName || 'N/A'}</span> <span className="text-slate-300 ml-1">({txn.senderAccount || 'N/A'})</span>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
             <button className="w-full mt-10 py-4 bg-slate-50 text-psi-navy rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-slate-100 transition">
               Full Statement
@@ -120,12 +140,12 @@ const MemberPortal: React.FC<MemberPortalProps> = ({ customer, accounts, transac
           </section>
 
           <section className="bg-[#2E9E6F] p-8 rounded-[40px] text-white relative overflow-hidden">
-             <div className="absolute bottom-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-[40px] -mr-20 -mb-20"></div>
-             <div className="relative z-10 space-y-6">
-                <h4 className="text-xl font-black tracking-tight leading-tight">Financial Wellness Score: 780</h4>
-                <p className="text-sm text-white/80 font-medium">Your spending is 12% lower than last month. You're on track for your savings goal!</p>
-                <button className="bg-white text-[#2E9E6F] px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">Wellness Hub</button>
-             </div>
+            <div className="absolute bottom-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-[40px] -mr-20 -mb-20"></div>
+            <div className="relative z-10 space-y-6">
+              <h4 className="text-xl font-black tracking-tight leading-tight">Financial Wellness Score: 780</h4>
+              <p className="text-sm text-white/80 font-medium">Your spending is 12% lower than last month. You're on track for your savings goal!</p>
+              <button className="bg-white text-[#2E9E6F] px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">Wellness Hub</button>
+            </div>
           </section>
         </div>
       </div>

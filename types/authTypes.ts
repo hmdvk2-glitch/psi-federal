@@ -22,6 +22,7 @@ export interface AdminUser {
 export interface CustomerUser {
   id: string;
   accountNumber: string;
+  email: string;
   password: string; // Simulation only. Never store plain text in production.
   balance: number;
   fullName: string;

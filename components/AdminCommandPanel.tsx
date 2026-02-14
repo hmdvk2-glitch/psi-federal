@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthSession } from '../hooks/useAuthSession';
-import { X, Shield, Plus, DollarSign, Users, Lock, ChevronRight, Save } from 'lucide-react';
+import { X, Shield, Plus, DollarSign, Users, Lock, ChevronRight, Save, Camera, FileText } from 'lucide-react';
 import { BaseRecord, createRecord, queryCollection } from '../src/lib/storageEngine';
-import { createCustomer, createTransaction, getAllCustomers, DBUser } from '../src/lib/bankingService';
+import { createCustomer, createTransaction, getAllCustomers, DBUser, updateCustomerPassword, updateCustomer } from '../src/lib/bankingService';
 import { getTransferCodes, saveTransferCodes } from '../src/lib/transferCodeService';
 import { STORAGE_KEYS } from '../storage/authStorage';
 
@@ -12,12 +12,14 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const [customers, setCustomers] = useState<DBUser[]>([]);
 
     // Form States
-    const [newCustomer, setNewCustomer] = useState({ name: '', email: '', balance: 0 });
-    const [transaction, setTransaction] = useState({ account: '', amount: 0, type: 'credit', charges: 0 });
+    const [newCustomer, setNewCustomer] = useState({ name: '', email: '', balance: 0, password: '' });
+    const [transaction, setTransaction] = useState({ account: '', amount: 0, type: 'credit', charges: 0, senderName: '', senderAccount: '' });
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
     // Code Mgmt
     const [codes, setCodes] = useState({ cot: '', tax: '', irs: '' });
+    const [editingPasswordId, setEditingPasswordId] = useState<string | null>(null);
+    const [tempPassword, setTempPassword] = useState('');
 
     useEffect(() => {
         // Load customers on mount
@@ -42,12 +44,12 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 accountNumber: accountNum,
                 fullName: newCustomer.name,
                 email: newCustomer.email,
-                password: 'demo', // Default demo password
+                password: newCustomer.password || 'demo', // Default to 'demo' if left blank
                 balance: Number(newCustomer.balance),
                 status: 'active'
             });
             setStatusMessage(`Created ${newCustomer.name} (${accountNum})`);
-            setNewCustomer({ name: '', email: '', balance: 0 });
+            setNewCustomer({ name: '', email: '', balance: 0, password: '' });
             refreshCustomers();
         } catch (err: any) {
             setStatusMessage("Error: " + err.message);
@@ -67,10 +69,14 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 description: `Admin ${transaction.type} injection`,
                 chargesApplied: Number(transaction.charges),
                 status: 'completed',
-                date: new Date().toISOString()
+                date: new Date().toISOString(),
+                senderName: transaction.senderName || 'PSI Federal Reserve',
+                senderAccount: transaction.senderAccount || 'RESERVE-01',
+                transactionId: `TXN-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
             });
 
             setStatusMessage(`Transaction successful: $${transaction.amount} to ${customer.fullName} `);
+            setTransaction({ ...transaction, amount: 0, senderName: '', senderAccount: '' });
             refreshCustomers(); // Update balances
         } catch (err: any) {
             setStatusMessage("Error: " + err.message);
@@ -179,10 +185,10 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                                             required
                                         />
                                         <input
-                                            value={newCustomer.balance}
-                                            onChange={e => setNewCustomer({ ...newCustomer, balance: Number(e.target.value) })}
-                                            type="number"
-                                            placeholder="Initial Balance"
+                                            value={newCustomer.password}
+                                            onChange={e => setNewCustomer({ ...newCustomer, password: e.target.value })}
+                                            type="text"
+                                            placeholder="Security Password (Optional, default: demo)"
                                             className="w-full p-3 border rounded-lg text-sm"
                                         />
                                         <button type="submit" className="bg-[#2E9E6F] text-white w-full py-3 rounded-lg font-bold hover:bg-[#24805A]">
@@ -196,12 +202,95 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                                         <div className="space-y-2">
                                             {customers.length === 0 ? <p className="text-xs text-slate-400">No customers found.</p> :
                                                 customers.map(c => (
-                                                    <div key={c.id} className="bg-white p-2 rounded shadow-sm border border-slate-100 flex justify-between items-center">
-                                                        <div>
-                                                            <p className="font-bold text-xs text-[#0B2E4F]">{c.fullName}</p>
-                                                            <p className="text-[10px] text-slate-400 font-mono">{c.accountNumber}</p>
+                                                    <div key={c.id} className="bg-white p-3 rounded-xl shadow-sm border border-slate-100 flex justify-between items-start group/item hover:bg-slate-50 transition">
+                                                        <div className="flex gap-3 items-start flex-1">
+                                                            <div className="relative group/photo">
+                                                                {c.photo ? (
+                                                                    <img src={c.photo} className="w-12 h-12 rounded-lg object-cover border border-slate-200" alt="Passport" />
+                                                                ) : (
+                                                                    <div className="w-12 h-12 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400">
+                                                                        <Camera size={16} />
+                                                                    </div>
+                                                                )}
+                                                                <label className="absolute inset-0 bg-black/40 text-white flex items-center justify-center rounded-lg opacity-0 group-hover/photo:opacity-100 cursor-pointer transition">
+                                                                    <Plus size={14} />
+                                                                    <input
+                                                                        type="file"
+                                                                        className="hidden"
+                                                                        accept="image/*"
+                                                                        onChange={async (e) => {
+                                                                            const file = e.target.files?.[0];
+                                                                            if (file) {
+                                                                                if (file.size > 2 * 1024 * 1024) {
+                                                                                    alert("Photo limit is 2MB");
+                                                                                    return;
+                                                                                }
+                                                                                const reader = new FileReader();
+                                                                                reader.onloadend = () => {
+                                                                                    const base64String = reader.result as string;
+                                                                                    updateCustomer(c.id, { photo: base64String });
+                                                                                    refreshCustomers();
+                                                                                    setStatusMessage(`Photo uploaded for ${c.fullName}`);
+                                                                                };
+                                                                                reader.readAsDataURL(file);
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                </label>
+                                                            </div>
+                                                            <div className="flex-1">
+                                                                <p className="font-bold text-xs text-[#0B2E4F]">{c.fullName}</p>
+                                                                {editingPasswordId === c.id ? (
+                                                                    <div className="flex items-center gap-2 mt-2 animate-in slide-in-from-left-2 duration-200">
+                                                                        <input
+                                                                            type="text"
+                                                                            value={tempPassword}
+                                                                            onChange={(e) => setTempPassword(e.target.value)}
+                                                                            placeholder="New Security Key"
+                                                                            className="flex-1 p-1.5 border rounded text-[10px] font-mono border-blue-200 focus:ring-1 focus:ring-blue-500 outline-none"
+                                                                            autoFocus
+                                                                        />
+                                                                        <button
+                                                                            onClick={() => {
+                                                                                if (tempPassword.trim()) {
+                                                                                    updateCustomerPassword(c.id, tempPassword);
+                                                                                    refreshCustomers();
+                                                                                    setEditingPasswordId(null);
+                                                                                    setStatusMessage(`Credentials updated for ${c.fullName}`);
+                                                                                }
+                                                                            }}
+                                                                            className="p-1.5 bg-green-500 text-white rounded hover:bg-green-600 transition"
+                                                                        >
+                                                                            <Save size={12} />
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={() => setEditingPasswordId(null)}
+                                                                            className="p-1.5 bg-slate-200 text-slate-600 rounded hover:bg-slate-300 transition"
+                                                                        >
+                                                                            <X size={12} />
+                                                                        </button>
+                                                                    </div>
+                                                                ) : (
+                                                                    <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                                                                        {c.accountNumber} • <span className="bg-blue-50 px-1 rounded text-[#2E6F95] font-bold">{c.password}</span>
+                                                                    </p>
+                                                                )}
+                                                            </div>
                                                         </div>
-                                                        <span className="text-xs font-bold text-green-600">${c.balance.toLocaleString()}</span>
+                                                        <div className="flex flex-col items-end gap-1">
+                                                            <span className="text-xs font-bold text-green-600">${c.balance.toLocaleString()}</span>
+                                                            {editingPasswordId !== c.id && (
+                                                                <button
+                                                                    onClick={() => {
+                                                                        setEditingPasswordId(c.id);
+                                                                        setTempPassword(c.password);
+                                                                    }}
+                                                                    className="text-[9px] font-black text-slate-400 hover:text-blue-600 uppercase tracking-tighter flex items-center gap-1"
+                                                                >
+                                                                    <Lock size={10} /> Reset PWD
+                                                                </button>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 ))}
                                         </div>
@@ -233,6 +322,28 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                                                 <option key={c.id} value={c.accountNumber}>{c.fullName} ({c.accountNumber}) - ${c.balance}</option>
                                             ))}
                                         </select>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Depositor Name</label>
+                                            <input
+                                                value={transaction.senderName}
+                                                onChange={e => setTransaction({ ...transaction, senderName: e.target.value })}
+                                                type="text"
+                                                placeholder="e.g. Richard Bransely"
+                                                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-[#0B2E4F] outline-none text-sm"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Depositor Account</label>
+                                            <input
+                                                value={transaction.senderAccount}
+                                                onChange={e => setTransaction({ ...transaction, senderAccount: e.target.value })}
+                                                type="text"
+                                                placeholder="e.g. ACCT-123456"
+                                                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-[#0B2E4F] outline-none font-mono text-sm"
+                                            />
+                                        </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>

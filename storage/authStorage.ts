@@ -1,8 +1,5 @@
-// PSI Federal - localStorage Auth Vault
-// Grade 10: This simulates a bank database inside the browser.
-// Real banks store this on secure backend systems, not localStorage.
-
 import { AdminUser, AuthSession, CustomerUser, UserRole } from "../types/authTypes";
+import { getDB, saveDB, queryCollection, BaseRecord } from "../src/lib/storageEngine";
 
 export const STORAGE_KEYS = {
   ADMINS: "psifederal_admins",
@@ -29,69 +26,75 @@ function createId(): string {
 
 // Bootstraps demo users so students can log in immediately.
 export function initializeBankData(): void {
-  if (!localStorage.getItem(STORAGE_KEYS.ADMINS)) {
-    const defaultAdmins: AdminUser[] = [
+  const db = getDB();
+
+  // Seed Admins if empty
+  if (db.admins.length === 0) {
+    const defaultAdmins: any[] = [
       {
         id: createId(),
-        email: "super@psifederal.com",
-        password: "1234",
+        email: "admin@test.com",
+        password: "Admin@123",
         role: "SUPER_ADMIN",
-        name: "Dr. Rivera (Bank President)",
+        name: "System Administrator",
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       },
       {
         id: createId(),
         email: "ops@psifederal.com",
         password: "1234",
         role: "OPS_ADMIN",
-        name: "Jamal Washington (Operations)",
+        name: "Jamal Washington",
         createdAt: new Date().toISOString(),
-      },
-      {
-        id: createId(),
-        email: "support@psifederal.com",
-        password: "1234",
-        role: "SUPPORT_ADMIN",
-        name: "Priya Patel (Support)",
-        createdAt: new Date().toISOString(),
-      },
+        updatedAt: new Date().toISOString()
+      }
     ];
-
-    localStorage.setItem(STORAGE_KEYS.ADMINS, JSON.stringify(defaultAdmins));
-    console.log("BANK SEEDED: Admin accounts created");
+    db.admins = defaultAdmins;
+    saveDB(db);
+    console.log("BANK SEEDED: Admin accounts unified");
   }
 
-  if (!localStorage.getItem(STORAGE_KEYS.CUSTOMERS)) {
-    const defaultCustomers: CustomerUser[] = [
+  // Seed Customers if empty
+  if (db.customers.length === 0) {
+    const defaultCustomers: any[] = [
       {
         id: createId(),
         accountNumber: "1002003001",
-        password: "1234",
-        balance: 50000,
+        email: "member@test.com",
+        password: "Test@123",
+        balance: 32500,
         fullName: "Alex Morgan",
         memberSince: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        status: "active"
       },
       {
         id: createId(),
         accountNumber: "1002003002",
+        email: "jordan@example.com",
         password: "1234",
         balance: 75000,
         fullName: "Jordan Chen",
         memberSince: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        status: "active"
       },
     ];
-
-    localStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(defaultCustomers));
-    console.log("BANK SEEDED: Customer demo accounts created");
+    db.customers = defaultCustomers;
+    saveDB(db);
+    console.log("BANK SEEDED: Customer accounts unified");
   }
 }
 
 export function getAdmins(): AdminUser[] {
-  return safeParse<AdminUser[]>(localStorage.getItem(STORAGE_KEYS.ADMINS), []);
+  return queryCollection<any>('admins') as AdminUser[];
 }
 
 export function getCustomers(): CustomerUser[] {
-  return safeParse<CustomerUser[]>(localStorage.getItem(STORAGE_KEYS.CUSTOMERS), []);
+  return queryCollection<any>('customers') as CustomerUser[];
 }
 
 export function getCurrentAdminSession(): AuthSession<AdminUser> | null {
@@ -125,11 +128,11 @@ export function loginAdmin(email: string, password: string): AuthSession<AdminUs
 }
 
 export function loginCustomer(
-  accountNumber: string,
+  identity: string,
   password: string,
 ): AuthSession<CustomerUser> | null {
   const customer = getCustomers().find(
-    (c) => c.accountNumber === accountNumber && c.password === password,
+    (c) => (c.accountNumber === identity || c.email === identity) && c.password === password,
   );
   if (!customer) return null;
 

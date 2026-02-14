@@ -10,12 +10,12 @@ export const AdminDashboard: React.FC = () => {
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
             {/* Top Banner */}
-            <div className="bg-gradient-to-br from-[#0a1f44] via-[#123b7c] to-[#1d4e89] text-white rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+            <div className="bg-gradient-to-br from-[#001D4D] via-[#002D72] to-[#004A99] text-white rounded-[40px] p-10 shadow-2xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
                 <div className="relative z-10">
-                    <p className="text-xs font-bold uppercase tracking-widest text-blue-200 mb-2">PSI Federal Operations</p>
-                    <h1 className="text-3xl md:text-5xl font-black tracking-tight mb-2">Admin Portal</h1>
-                    <p className="text-blue-100 font-medium">Welcome back, <span className="text-white font-bold">{admin?.name}</span></p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-300 mb-4">Federal Trust Administration</p>
+                    <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-4 italic">Command Center</h1>
+                    <p className="text-xl text-blue-100 font-medium">System Operator: <span className="text-white font-black">{admin?.name}</span></p>
                 </div>
             </div>
 

@@ -1,80 +1,47 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAuthSession } from "./hooks/useAuthSession";
-import Layout from "./components/Layout";
+import { LandingPage } from "./pages/LandingPage";
+import { MemberDashboard } from "./components/dashboard/MemberDashboard";
 import { AdminDashboard } from "./components/AdminDashboard";
-import { CustomerDashboard } from "./components/CustomerDashboard";
-import { LoginPortal } from "./components/LoginPortal";
-import ModernizationPlan from "./components/ModernizationPlan";
+import { FloatingAdminButton } from "./components/FloatingAdminButton";
 
 function App(): React.ReactElement {
   const { admin, customer, isLoading } = useAuthSession();
-  const [showModernizationPreview, setShowModernizationPreview] = useState(false);
 
-  // 1. Loading State
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#001D4D] flex items-center justify-center">
         <div className="flex flex-col items-center animate-pulse">
-          <div className="w-12 h-12 bg-[#0a1f44] rounded-lg mb-4"></div>
-          <p className="text-[#0a1f44] font-bold tracking-widest text-xs uppercase">Initializing Session...</p>
+          <div className="w-16 h-16 bg-white/10 rounded-2xl mb-6 flex items-center justify-center">
+            <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+          </div>
+          <p className="text-white/60 font-black tracking-[0.3em] text-[10px] uppercase">Establishing Secure Link</p>
         </div>
       </div>
     );
   }
 
-  // 2. Modernization Preview Overlay
-  if (showModernizationPreview) {
-    return (
-      <Layout>
-        <div className="max-w-7xl mx-auto mb-8 animate-in slide-in-from-top-4 fade-in duration-500">
-          <button
-            type="button"
-            onClick={() => setShowModernizationPreview(false)}
-            className="px-6 py-3 bg-white text-[#0a1f44] font-black rounded-xl hover:bg-slate-100 transition shadow-lg border border-slate-200 flex items-center gap-2"
-          >
-            ← Back to Secure Access Center
-          </button>
-        </div>
-        <ModernizationPlan />
-      </Layout>
-    );
-  }
-
-  // 3. Admin Dashboard
+  // Admin View
   if (admin) {
     return (
-      <Layout variant="admin">
+      <div className="min-h-screen bg-slate-50">
         <AdminDashboard />
-      </Layout>
+        <FloatingAdminButton />
+      </div>
     );
   }
 
-  // 4. Customer Dashboard
+  // Customer View
   if (customer) {
     return (
-      <Layout variant="customer">
-        <CustomerDashboard />
-      </Layout>
+      <div className="min-h-screen bg-slate-50">
+        <MemberDashboard />
+      </div>
     );
   }
 
-  // 5. Default Login Portal
-  return (
-    <Layout>
-      <div className="absolute top-4 right-4 z-50">
-        <button
-          type="button"
-          onClick={() => setShowModernizationPreview(true)}
-          className="px-4 py-2 bg-[#0a1f44]/10 text-[#0a1f44] text-xs font-bold rounded-lg hover:bg-[#0a1f44] hover:text-white transition uppercase tracking-widest backdrop-blur-sm"
-        >
-          UI Preview
-        </button>
-      </div>
-      <div className="min-h-[80vh] flex flex-col justify-center">
-        <LoginPortal />
-      </div>
-    </Layout>
-  );
+  // Default: Mirrored Homepage
+  return <LandingPage />;
 }
 
 export default App;

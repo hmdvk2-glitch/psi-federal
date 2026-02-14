@@ -1,3 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --navy-deep: #002D72;
+  --navy-mid: #004A99;
+  --navy-light: #E6F0F9;
+  --accent-gold: #FFB81C;
+  --text-main: #1A1A1A;
+  --text-muted: #555555;
+  --white: #FFFFFF;
+}
+
+body {
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--text-main);
+  background-color: var(--white);
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', serif;
+}
+
+.bg-navy-deep { background-color: var(--navy-deep); }
+.text-navy-deep { color: var(--navy-deep); }
+.bg-navy-mid { background-color: var(--navy-mid); }
+.border-navy-deep { border-color: var(--navy-deep); }
+
+@layer components {
+  .btn-primary {
+    @apply bg-[#002D72] text-white px-6 py-3 rounded-lg font-bold hover:bg-[#001D4D] transition-all duration-300 shadow-md hover:shadow-lg active:scale-95;
+  }
+  
+  .btn-secondary {
+    @apply bg-white text-[#002D72] border-2 border-[#002D72] px-6 py-3 rounded-lg font-bold hover:bg-[#E6F0F9] transition-all duration-300 active:scale-95;
+  }
+}
+
+/* Custom Utilities */
+.shadow-premium {
+  box-shadow: 0 10px 30px -5px rgba(0, 45, 114, 0.1), 0 4px 12px -3px rgba(0, 45, 114, 0.05);
+}
+
+.glass-card {
+  @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-xl;
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}

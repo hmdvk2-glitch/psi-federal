@@ -7,6 +7,7 @@ export interface DBUser extends BaseRecord {
     password: string; // Stored in plain text for this simulation (security grade 10 requirement)
     balance: number;
     status: "active" | "restricted";
+    photo?: string; // Base64 encoded passport photo
 }
 
 export interface DBTransaction extends BaseRecord {
@@ -17,6 +18,9 @@ export interface DBTransaction extends BaseRecord {
     chargesApplied: number;
     status: "completed" | "pending";
     date: string;
+    senderName?: string;
+    senderAccount?: string;
+    transactionId: string;
 }
 
 // ----------------------------------------------------------------------
@@ -45,6 +49,14 @@ export function getCustomerByAccount(accountNumber: string): DBUser | undefined 
     return queryCollection<DBUser>('customers', c => c.accountNumber === accountNumber)[0];
 }
 
+export function updateCustomer(id: string, updates: Partial<DBUser>): void {
+    updateRecord<DBUser>('customers', id, updates);
+}
+
+export function updateCustomerPassword(id: string, newPassword: string): void {
+    updateRecord<DBUser>('customers', id, { password: newPassword });
+}
+
 // ----------------------------------------------------------------------
 // TRANSACTION SERVICE LAYER
 // ----------------------------------------------------------------------
@@ -56,7 +68,10 @@ export function createTransaction(payload: Omit<DBTransaction, keyof BaseRecord>
     }
 
     // 1. Create Transaction Record
-    const transaction = createRecord<DBTransaction>('transactions', payload);
+    const transaction = createRecord<DBTransaction>('transactions', {
+        ...payload,
+        transactionId: payload.transactionId || `TXN-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
+    });
 
     // 2. Update Customer Balance
     let newBalance = customer.balance;

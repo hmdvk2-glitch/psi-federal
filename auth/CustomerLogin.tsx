@@ -11,8 +11,11 @@ export function CustomerLogin(): React.ReactElement {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const customers = getCustomers();
+    const inputAcc = accountNumber.trim();
     const foundCustomer = customers.find(
-      (customer) => customer.accountNumber === accountNumber.trim() && customer.password === password,
+      (customer) =>
+        (customer.accountNumber === inputAcc || customer.accountNumber === `ACCT-${inputAcc}`) &&
+        customer.password === password,
     );
 
     if (!foundCustomer) {
