@@ -28,16 +28,19 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, isAdmin
         try {
             if (isAdminMode) {
                 // Simple admin check for demo
-                if (email === 'admin@test.com' && password === 'Admin@123') {
+                if ((email === 'admin@test.com' && password === 'Admin@123') || (email === 'ops@psifederal.com' && password === '1234')) {
+                    const isOps = email === 'ops@psifederal.com';
                     setAdmin({
-                        id: 'admin-1',
-                        email: 'admin@test.com',
-                        password: 'Admin@123',
-                        name: 'System Administrator',
-                        role: 'SUPER_ADMIN',
+                        id: isOps ? 'admin-ops' : 'admin-1',
+                        email: email,
+                        password: password,
+                        name: isOps ? 'Operations Admin' : 'System Administrator',
+                        role: isOps ? 'OPS_ADMIN' : 'SUPER_ADMIN',
                         createdAt: new Date().toISOString()
                     });
                     onClose();
+                    // Force reload to ensure admin button appears
+                    window.location.reload();
                 } else {
                     setError('Invalid Administration Credentials');
                 }
