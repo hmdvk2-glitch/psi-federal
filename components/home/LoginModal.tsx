@@ -85,14 +85,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, isAdmin
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Email Address</label>
+                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Account Number</label>
                             <input
-                                type="email"
+                                type="text"
                                 required
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
-                                className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:border-[#002D72] focus:ring-4 focus:ring-[#002D72]/5 outline-none font-medium transition"
-                                placeholder="name@example.com"
+                                className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:border-[#002D72] focus:ring-4 focus:ring-[#002D72]/5 outline-none font-medium transition font-mono"
+                                placeholder="e.g. 1002003001"
                             />
                         </div>
 
