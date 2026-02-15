@@ -73,11 +73,11 @@ export const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
                         {/* HIDDEN ADMIN SHIELD */}
                         <button
                             onClick={onAdminClick}
-                            className="group relative flex items-center gap-2 text-white/5 hover:text-white/20 transition-all duration-700 cursor-default"
+                            className="group relative flex items-center gap-2 text-white/60 hover:text-white transition-all duration-300 cursor-pointer"
                             title="Authorized Personnel Only"
                         >
-                            <Shield size={16} className="opacity-50 group-hover:opacity-100 transition" />
-                            <span className="text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition">Vault Access</span>
+                            <Shield size={16} className="text-emerald-400" />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">Vault Access</span>
                         </button>
                     </div>
                 </div>
