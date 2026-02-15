@@ -131,8 +131,13 @@ export function loginCustomer(
   identity: string,
   password: string,
 ): AuthSession<CustomerUser> | null {
+  // Check for direct match (Email or Full Account Number) OR partial match (Numbers only)
   const customer = getCustomers().find(
-    (c) => (c.accountNumber === identity || c.email === identity) && c.password === password,
+    (c) => (
+      c.accountNumber === identity ||
+      c.accountNumber === `ACCT-${identity}` ||
+      c.email === identity
+    ) && c.password === password
   );
   if (!customer) return null;
 
