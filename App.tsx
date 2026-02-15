@@ -7,6 +7,7 @@ import { FloatingAdminButton } from "./components/FloatingAdminButton";
 
 function App(): React.ReactElement {
   const { admin, customer, isLoading } = useAuthSession();
+  console.log("APP STATE:", { isLoading, admin: !!admin, customer: !!customer });
 
   if (isLoading) {
     return (
