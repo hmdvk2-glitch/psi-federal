@@ -13,7 +13,16 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
     // Form States
     const [newCustomer, setNewCustomer] = useState({ name: '', email: '', balance: 0, password: '' });
-    const [transaction, setTransaction] = useState({ account: '', amount: 0, type: 'credit', charges: 0, senderName: '', senderAccount: '' });
+    const [transaction, setTransaction] = useState({
+        account: '',
+        amount: 0,
+        type: 'credit',
+        charges: 0,
+        senderName: '',
+        senderAccount: '',
+        description: '',
+        customDate: ''
+    });
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
     // Code Mgmt
@@ -69,17 +78,24 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 customerId: customer.id,
                 type: transaction.type as any,
                 amount: Number(transaction.amount),
-                description: `Admin ${transaction.type} injection`,
+                description: transaction.description || `Admin ${transaction.type} injection`,
                 chargesApplied: Number(transaction.charges),
                 status: 'completed',
-                date: new Date().toISOString(),
+                date: transaction.customDate ? new Date(transaction.customDate).toISOString() : new Date().toISOString(),
                 senderName: transaction.senderName || 'PSI Federal Reserve',
                 senderAccount: transaction.senderAccount || 'RESERVE-01',
                 transactionId: `TXN-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
             });
 
             setStatusMessage(`Transaction successful: $${transaction.amount} to ${customer.fullName} `);
-            setTransaction({ ...transaction, amount: 0, senderName: '', senderAccount: '' });
+            setTransaction({
+                ...transaction,
+                amount: 0,
+                senderName: '',
+                senderAccount: '',
+                description: '',
+                customDate: ''
+            });
             refreshCustomers(); // Update balances
         } catch (err: any) {
             setStatusMessage("Error: " + err.message);
@@ -344,6 +360,25 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                                         </select>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
+                                        <div className="col-span-2">
+                                            <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Description / Memo</label>
+                                            <input
+                                                value={transaction.description}
+                                                onChange={e => setTransaction({ ...transaction, description: e.target.value })}
+                                                type="text"
+                                                placeholder="e.g. Wire Transfer - JPM Chase"
+                                                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-[#0B2E4F] outline-none text-sm"
+                                            />
+                                        </div>
+                                        <div className="col-span-2">
+                                            <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Backdate (Optional)</label>
+                                            <input
+                                                value={transaction.customDate}
+                                                onChange={e => setTransaction({ ...transaction, customDate: e.target.value })}
+                                                type="datetime-local"
+                                                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-[#0B2E4F] outline-none text-sm font-mono"
+                                            />
+                                        </div>
                                         <div>
                                             <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Depositor Name</label>
                                             <input
