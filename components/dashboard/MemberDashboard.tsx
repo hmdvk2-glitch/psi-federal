@@ -17,6 +17,7 @@ import {
     Plus
 } from 'lucide-react';
 import { AtmCardVisual } from './AtmCardVisual';
+import { TransferModal } from './TransferModal';
 
 export const MemberDashboard: React.FC = () => {
     const { customer, logout } = useAuthSession();
@@ -24,6 +25,7 @@ export const MemberDashboard: React.FC = () => {
     const [transactions, setTransactions] = useState<DBTransaction[]>([]);
     const [isRequestingCard, setIsRequestingCard] = useState(false);
     const [cardStatus, setCardStatus] = useState<'none' | 'processing'>('none');
+    const [isTransferOpen, setIsTransferOpen] = useState(false);
 
     useEffect(() => {
         if (customer) {
@@ -87,8 +89,8 @@ export const MemberDashboard: React.FC = () => {
                                 key={tab}
                                 onClick={() => setActiveTab(tab as any)}
                                 className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === tab
-                                        ? 'bg-[#002D72] text-white shadow-lg shadow-blue-900/20'
-                                        : 'bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-[#002D72]'
+                                    ? 'bg-[#002D72] text-white shadow-lg shadow-blue-900/20'
+                                    : 'bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-[#002D72]'
                                     }`}
                             >
                                 {tab}
@@ -188,7 +190,7 @@ export const MemberDashboard: React.FC = () => {
                             <div className="bg-white rounded-[40px] p-10 shadow-premium border border-slate-100 flex flex-col justify-between aspect-square">
                                 <h4 className="text-sm font-black uppercase tracking-widest text-[#002D72]">Quick Actions</h4>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <QuickAction label="Send Money" color="bg-blue-50" />
+                                    <QuickAction label="Send Money" color="bg-blue-50" onClick={() => setIsTransferOpen(true)} />
                                     <QuickAction label="Pay Bills" color="bg-amber-50" />
                                     <QuickAction label="Zelle®" color="bg-purple-50" />
                                     <QuickAction label="Help" color="bg-slate-50" />
@@ -251,12 +253,23 @@ export const MemberDashboard: React.FC = () => {
                     </div>
                 )}
             </main>
+
+            <TransferModal
+                isOpen={isTransferOpen}
+                onClose={() => setIsTransferOpen(false)}
+                onSuccess={() => {
+                    // Refresh transactions
+                    if (customer) {
+                        setTransactions(getTransactionsForCustomer(customer.id).reverse());
+                    }
+                }}
+            />
         </div>
     );
 };
 
-const QuickAction = ({ label, color }: { label: string; color: string }) => (
-    <button className={`${color} p-6 rounded-3xl flex flex-col items-center justify-center gap-3 hover:scale-105 transition duration-300 group`}>
+const QuickAction = ({ label, color, onClick }: { label: string; color: string; onClick?: () => void }) => (
+    <button onClick={onClick} className={`${color} p-6 rounded-3xl flex flex-col items-center justify-center gap-3 hover:scale-105 transition duration-300 group`}>
         <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-[#002D72] group-hover:bg-[#002D72] group-hover:text-white transition">
             <Plus size={20} />
         </div>
