@@ -1,5 +1,5 @@
 import { AdminUser, AuthSession, CustomerUser, UserRole } from "../types/authTypes";
-import { getDB, saveDB, queryCollection, BaseRecord } from "../src/lib/storageEngine";
+import { getDB, saveDB, queryCollection, queryCollectionAsync, BaseRecord } from "../src/lib/storageEngine";
 
 export const STORAGE_KEYS = {
   ADMINS: "psifederal_admins",
@@ -82,6 +82,18 @@ export function initializeBankData(): void {
         updatedAt: new Date().toISOString(),
         status: "active"
       },
+      {
+        id: createId(),
+        accountNumber: "9900112233",
+        email: "sarah@psifederal.com",
+        password: "1234",
+        balance: 1542000,
+        fullName: "Sarah Jenkins",
+        memberSince: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        status: "active"
+      },
     ];
     db.customers = defaultCustomers;
     saveDB(db);
@@ -93,8 +105,16 @@ export function getAdmins(): AdminUser[] {
   return queryCollection<any>('admins') as AdminUser[];
 }
 
+export async function getAdminsAsync(): Promise<AdminUser[]> {
+  return queryCollectionAsync<any>('admins') as Promise<AdminUser[]>;
+}
+
 export function getCustomers(): CustomerUser[] {
   return queryCollection<any>('customers') as CustomerUser[];
+}
+
+export async function getCustomersAsync(): Promise<CustomerUser[]> {
+  return queryCollectionAsync<any>('customers') as Promise<CustomerUser[]>;
 }
 
 export function getCurrentAdminSession(): AuthSession<AdminUser> | null {
@@ -112,7 +132,7 @@ export function getCurrentCustomerSession(): AuthSession<CustomerUser> | null {
 }
 
 export function loginAdmin(email: string, password: string): AuthSession<AdminUser> | null {
-  const admin = getAdmins().find((a) => a.email === email && a.password === password);
+  const admin = getAdmins().find((a) => a.email.toLowerCase() === email.toLowerCase() && a.password === password);
   if (!admin) return null;
 
   const session: AuthSession<AdminUser> = {
@@ -136,7 +156,7 @@ export function loginCustomer(
     (c) => (
       c.accountNumber === identity ||
       c.accountNumber === `ACCT-${identity}` ||
-      c.email === identity
+      c.email.toLowerCase() === identity.toLowerCase()
     ) && c.password === password
   );
   if (!customer) return null;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuthSession } from "../hooks/useAuthSession";
-import { getAdmins } from "../storage/authStorage";
+import { getAdminsAsync } from "../storage/authStorage";
 
 export function AdminLogin(): React.ReactElement {
   const [email, setEmail] = useState("");
@@ -8,9 +8,9 @@ export function AdminLogin(): React.ReactElement {
   const [error, setError] = useState("");
   const { loginAdmin } = useAuthSession();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    const admins = getAdmins();
+    const admins = await getAdminsAsync();
     const foundAdmin = admins.find(
       (admin) => admin.email === email.trim() && admin.password === password,
     );

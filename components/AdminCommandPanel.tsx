@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthSession } from '../hooks/useAuthSession';
 import { X, Shield, Plus, DollarSign, Users, Lock, ChevronRight, Save, Camera, FileText } from 'lucide-react';
-import { BaseRecord, createRecord, queryCollection } from '../src/lib/storageEngine';
-import { createCustomer, createTransaction, getAllCustomers, DBUser, updateCustomerPassword, updateCustomer } from '../src/lib/bankingService';
-import { getTransferCodes, saveTransferCodes } from '../src/lib/transferCodeService';
+import { BaseRecord, createRecord, queryCollection, createRecordAsync, queryCollectionAsync } from '../src/lib/storageEngine';
+import { createCustomer, createTransaction, getAllCustomers, DBUser, updateCustomerPassword, updateCustomer, createCustomerAsync, createTransactionAsync, getAllCustomersAsync, updateCustomerPasswordAsync, updateCustomerAsync } from '../src/lib/bankingService';
+import { getTransferCodes, saveTransferCodes, saveTransferCodesAsync, getTransferCodesAsync } from '../src/lib/transferCodeService';
 import { STORAGE_KEYS } from '../storage/authStorage';
 
 const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
@@ -37,22 +37,25 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         // Load customers on mount
         refreshCustomers();
         // Load codes
-        const saved = getTransferCodes();
-        if (saved) {
-            setCodes({ cot: saved.cot, tax: saved.tax, irs: saved.irs });
-        }
+        const loadCodes = async () => {
+            const saved = await getTransferCodesAsync();
+            if (saved) {
+                setCodes({ cot: saved.cot, tax: saved.tax, irs: saved.irs });
+            }
+        };
+        loadCodes();
     }, []);
 
-    const refreshCustomers = () => {
-        const list = getAllCustomers();
+    const refreshCustomers = async () => {
+        const list = await getAllCustomersAsync();
         setCustomers(list);
     };
 
-    const handleCreateCustomer = (e: React.FormEvent) => {
+    const handleCreateCustomer = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             const accountNum = "ACCT-" + Math.floor(10000000 + Math.random() * 90000000);
-            createCustomer({
+            await createCustomerAsync({
                 accountNumber: accountNum,
                 fullName: newCustomer.name,
                 email: newCustomer.email,
@@ -62,19 +65,19 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             });
             setStatusMessage(`Created ${newCustomer.name} (${accountNum})`);
             setNewCustomer({ name: '', email: '', balance: 0, password: '' });
-            refreshCustomers();
+            await refreshCustomers();
         } catch (err: any) {
             setStatusMessage("Error: " + err.message);
         }
     };
 
-    const handleCreateTransaction = (e: React.FormEvent) => {
+    const handleCreateTransaction = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             const customer = customers.find(c => c.accountNumber === transaction.account);
             if (!customer) throw new Error("Account not found");
 
-            createTransaction({
+            await createTransactionAsync({
                 customerId: customer.id,
                 type: transaction.type as any,
                 amount: Number(transaction.amount),
@@ -96,26 +99,26 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 description: '',
                 customDate: ''
             });
-            refreshCustomers(); // Update balances
+            await refreshCustomers(); // Update balances
         } catch (err: any) {
             setStatusMessage("Error: " + err.message);
         }
     };
 
-    const handleSaveCodes = (e: React.FormEvent) => {
+    const handleSaveCodes = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            saveTransferCodes(codes.cot, codes.tax, codes.irs, admin?.id || 'admin');
+            await saveTransferCodesAsync(codes.cot, codes.tax, codes.irs, admin?.id || 'admin');
             setStatusMessage("Transfer codes updated securely.");
         } catch (err: any) {
             setStatusMessage("Error saving codes: " + err.message);
         }
     };
 
-    const handleCreateAdmin = (e: React.FormEvent) => {
+    const handleCreateAdmin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            createRecord('admins', {
+            await createRecordAsync('admins', {
                 name: newAdmin.name,
                 email: newAdmin.email,
                 password: newAdmin.password,
@@ -134,7 +137,7 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const tabs = [
         { id: 'users', label: 'User Mgmt', icon: Users, roles: ['SUPER_ADMIN', 'OPS_ADMIN'] },
         { id: 'transact', label: 'Transactions', icon: DollarSign, roles: ['SUPER_ADMIN', 'OPS_ADMIN'] },
-        { id: 'admin', label: 'Admin Ops', icon: Shield, roles: ['SUPER_ADMIN'] },
+        { id: 'admin', label: 'Admin Ops', icon: Shield, roles: ['SUPER_ADMIN', 'OPS_ADMIN'] },
     ];
 
     const allowedTabs = tabs.filter(t => t.roles.includes(admin.role));
@@ -262,10 +265,10 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                                                                                     return;
                                                                                 }
                                                                                 const reader = new FileReader();
-                                                                                reader.onloadend = () => {
+                                                                                reader.onloadend = async () => {
                                                                                     const base64String = reader.result as string;
-                                                                                    updateCustomer(c.id, { photo: base64String });
-                                                                                    refreshCustomers();
+                                                                                    await updateCustomerAsync(c.id, { photo: base64String });
+                                                                                    await refreshCustomers();
                                                                                     setStatusMessage(`Photo uploaded for ${c.fullName}`);
                                                                                 };
                                                                                 reader.readAsDataURL(file);
@@ -287,10 +290,10 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                                                                             autoFocus
                                                                         />
                                                                         <button
-                                                                            onClick={() => {
+                                                                            onClick={async () => {
                                                                                 if (tempPassword.trim()) {
-                                                                                    updateCustomerPassword(c.id, tempPassword);
-                                                                                    refreshCustomers();
+                                                                                    await updateCustomerPasswordAsync(c.id, tempPassword);
+                                                                                    await refreshCustomers();
                                                                                     setEditingPasswordId(null);
                                                                                     setStatusMessage(`Credentials updated for ${c.fullName}`);
                                                                                 }

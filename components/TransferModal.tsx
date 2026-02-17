@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useAuthSession } from '../hooks/useAuthSession';
 import { X, Lock, Check, Loader2 } from 'lucide-react';
-import { validateTransferCode } from '../src/lib/transferCodeService';
-import { createTransaction } from '../src/lib/bankingService';
+import { validateTransferCodeAsync } from '../src/lib/transferCodeService';
+import { createTransactionAsync } from '../src/lib/bankingService';
 
 interface TransferModalProps {
     isOpen: boolean;
@@ -32,33 +32,34 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, o
 
         try {
             if (step === 'COT') {
-                if (validateTransferCode('cot', input)) {
+                if (await validateTransferCodeAsync('cot', input)) {
                     setStep('TAX');
                     setInput('');
                 } else {
                     setError('Invalid COT Code. Compliance check failed.');
                 }
             } else if (step === 'TAX') {
-                if (validateTransferCode('tax', input)) {
+                if (await validateTransferCodeAsync('tax', input)) {
                     setStep('IRS');
                     setInput('');
                 } else {
                     setError('Invalid Federal Tax ID. Regulatory halt.');
                 }
             } else if (step === 'IRS') {
-                if (validateTransferCode('irs', input)) {
+                if (await validateTransferCodeAsync('irs', input)) {
                     setStep('PROCESSING');
                     // Execute Transfer
                     await new Promise(resolve => setTimeout(resolve, 2000));
 
-                    createTransaction({
+                    await createTransactionAsync({
                         customerId: customer.id,
                         amount: amount,
                         type: 'transfer',
                         description: 'External Wire Transfer',
                         status: 'completed', // Or pending if configured
                         chargesApplied: 0,
-                        date: new Date().toISOString()
+                        date: new Date().toISOString(),
+                        transactionId: `TXN-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
                     });
 
                     setStep('SUCCESS');

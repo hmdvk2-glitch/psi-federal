@@ -7,6 +7,8 @@ import { FloatingAdminButton } from "./components/FloatingAdminButton";
 
 function App(): React.ReactElement {
   const { admin, customer, isLoading } = useAuthSession();
+  const [isAdminPanelOpen, setIsAdminPanelOpen] = React.useState(false);
+
   console.log("APP STATE:", { isLoading, admin: !!admin, customer: !!customer });
 
   if (isLoading) {
@@ -26,8 +28,8 @@ function App(): React.ReactElement {
   if (admin) {
     return (
       <div className="min-h-screen bg-slate-50">
-        <AdminDashboard />
-        <FloatingAdminButton />
+        <AdminDashboard onOpenCommandPanel={() => setIsAdminPanelOpen(true)} />
+        <FloatingAdminButton isOpen={isAdminPanelOpen} setIsOpen={setIsAdminPanelOpen} />
       </div>
     );
   }

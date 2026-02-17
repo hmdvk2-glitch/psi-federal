@@ -4,7 +4,11 @@ import { RoleGuard } from "../auth/RoleGuard";
 import { LogoutButton } from "../auth/LogoutButton";
 import { Shield, Users, Settings, Activity } from "lucide-react";
 
-export const AdminDashboard: React.FC = () => {
+interface AdminDashboardProps {
+    onOpenCommandPanel: () => void;
+}
+
+export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onOpenCommandPanel }) => {
     const { admin } = useAuthSession();
 
     return (
@@ -42,7 +46,7 @@ export const AdminDashboard: React.FC = () => {
                             <p className="text-sm text-slate-500 mb-4 line-clamp-2">
                                 Manage system configuration, employee provisioning, and audit logs.
                             </p>
-                            <button type="button" className="px-4 py-2 bg-[#0a1f44] text-white text-sm font-bold rounded-lg shadow-lg hover:bg-[#071F36] transition w-full">
+                            <button onClick={onOpenCommandPanel} type="button" className="px-4 py-2 bg-[#0a1f44] text-white text-sm font-bold rounded-lg shadow-lg hover:bg-[#071F36] transition w-full">
                                 System Config
                             </button>
                         </div>
@@ -56,7 +60,7 @@ export const AdminDashboard: React.FC = () => {
                             <p className="text-sm text-slate-500 mb-4 line-clamp-2">
                                 View member accounts, troubleshoot transactions, and manage tickets.
                             </p>
-                            <button type="button" className="px-4 py-2 bg-white border-2 border-[#0a1f44] text-[#0a1f44] text-sm font-bold rounded-lg hover:bg-blue-50 transition w-full">
+                            <button onClick={onOpenCommandPanel} type="button" className="px-4 py-2 bg-white border-2 border-[#0a1f44] text-[#0a1f44] text-sm font-bold rounded-lg hover:bg-blue-50 transition w-full">
                                 View Member Queue
                             </button>
                         </div>

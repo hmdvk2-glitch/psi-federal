@@ -10,7 +10,7 @@ interface RoleGuardProps {
 
 export function RoleGuard({
   children,
-  fallback = <p>Access denied - role permission required.</p>,
+  fallback = null,
   allowedRoles,
 }: RoleGuardProps): React.ReactElement {
   const { hasRole, isLoading } = useAuthSession();

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuthSession } from "../hooks/useAuthSession";
-import { getCustomers } from "../storage/authStorage";
+import { getCustomersAsync } from "../storage/authStorage";
 
 export function CustomerLogin(): React.ReactElement {
   const [accountNumber, setAccountNumber] = useState("");
@@ -8,9 +8,9 @@ export function CustomerLogin(): React.ReactElement {
   const [error, setError] = useState("");
   const { loginCustomer } = useAuthSession();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    const customers = getCustomers();
+    const customers = await getCustomersAsync();
     const inputAcc = accountNumber.trim();
     const foundCustomer = customers.find(
       (customer) =>

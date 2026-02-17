@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Navbar } from '../components/home/Navbar';
-import { Hero } from '../components/home/Hero';
+import HeroCarousel from '../src/components/hero/HeroCarousel';
 import { FeatureStrip } from '../components/home/FeatureStrip';
 import { RatesSection } from '../components/home/RatesSection';
 import { Footer } from '../components/home/Footer';
@@ -22,7 +22,7 @@ export const LandingPage: React.FC = () => {
             <Navbar onLoginClick={openMemberLogin} />
 
             <main>
-                <Hero onLoginClick={openMemberLogin} />
+                <HeroCarousel onLoginClick={openMemberLogin} />
                 <FeatureStrip />
                 <RatesSection />
 

@@ -28,8 +28,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, isAdmin
         try {
             if (isAdminMode) {
                 // Simple admin check for demo
-                if ((email === 'admin@test.com' && password === 'Admin@123') || (email === 'ops@psifederal.com' && password === '1234')) {
-                    const isOps = email === 'ops@psifederal.com';
+                const normalizedEmail = email.toLowerCase().trim();
+
+                if ((normalizedEmail === 'admin@test.com' && password === 'Admin@123') || (normalizedEmail === 'ops@psifederal.com' && password === '1234')) {
+                    const isOps = normalizedEmail === 'ops@psifederal.com';
                     setAdmin({
                         id: isOps ? 'admin-ops' : 'admin-1',
                         email: email,
@@ -49,6 +51,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, isAdmin
                 if (result) {
                     setCustomer(result.user);
                     onClose();
+                    window.location.reload();
                 } else {
                     setError('Invalid Member Email or Access Code');
                 }

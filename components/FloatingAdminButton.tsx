@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import { Shield, Settings, Users, ArrowLeftRight, X } from 'lucide-react';
 import AdminCommandPanel from './AdminCommandPanel';
 
-export const FloatingAdminButton: React.FC = () => {
-    const [isOpen, setIsOpen] = useState(false);
+interface FloatingAdminButtonProps {
+    isOpen: boolean;
+    setIsOpen: (isOpen: boolean) => void;
+}
+
+export const FloatingAdminButton: React.FC<FloatingAdminButtonProps> = ({ isOpen, setIsOpen }) => {
 
     return (
         <>
