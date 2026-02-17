@@ -149,29 +149,12 @@ export function queryCollection<T extends BaseRecord>(
     }
 })();
 
-// Async / Supabase Integration
-import { supabase, isBackendActive } from './supabase';
-
+// Async API (Maintained for backward compatibility with UI components)
 export async function createRecordAsync<T extends BaseRecord>(
     collection: CollectionName,
     payload: Omit<T, 'id' | 'createdAt' | 'updatedAt'>
 ): Promise<T> {
-    const localRecord = createRecord<T>(collection, payload);
-
-    if (isBackendActive() && supabase) {
-        try {
-            const { error } = await supabase
-                .from(collection)
-                .insert(localRecord);
-
-            if (error) {
-                console.error(`Supabase create error in ${collection}:`, error);
-            }
-        } catch (e) {
-            console.error("Supabase connection failed:", e);
-        }
-    }
-    return localRecord;
+    return createRecord<T>(collection, payload);
 }
 
 export async function updateRecordAsync<T extends BaseRecord>(
@@ -179,73 +162,16 @@ export async function updateRecordAsync<T extends BaseRecord>(
     id: string,
     payload: Partial<Omit<T, 'id' | 'createdAt' | 'updatedAt'>>
 ): Promise<T | null> {
-    const localUpdated = updateRecord<T>(collection, id, payload);
-
-    if (isBackendActive() && supabase && localUpdated) {
-        try {
-            const { error } = await supabase
-                .from(collection)
-                .update(payload)
-                .eq('id', id);
-
-            if (error) {
-                console.error(`Supabase update error in ${collection}:`, error);
-            }
-        } catch (e) {
-            console.error("Supabase connection failed:", e);
-        }
-    }
-    return localUpdated;
+    return updateRecord<T>(collection, id, payload);
 }
 
 export async function deleteRecordAsync(collection: CollectionName, id: string): Promise<boolean> {
-    const localResult = deleteRecord(collection, id);
-
-    if (isBackendActive() && supabase) {
-        try {
-            const { error } = await supabase
-                .from(collection)
-                .delete()
-                .eq('id', id);
-
-            if (error) {
-                console.error(`Supabase delete error in ${collection}:`, error);
-            }
-        } catch (e) {
-            console.error("Supabase connection failed:", e);
-        }
-    }
-    return localResult;
+    return deleteRecord(collection, id);
 }
 
 export async function queryCollectionAsync<T extends BaseRecord>(
     collection: CollectionName,
     filterFn?: (item: T) => boolean
 ): Promise<T[]> {
-    if (isBackendActive() && supabase) {
-        try {
-            const { data, error } = await supabase
-                .from(collection)
-                .select('*');
-
-            if (!error && data) {
-                // Sync to local storage?
-                // For now, simpler to just return data.
-                // But we should update local cache to ensure offline fallback works?
-                // That might overwrite unsynced local changes.
-                // Strategy: Remote is source of truth.
-                let items = data as unknown as T[];
-                if (filterFn) {
-                    items = items.filter(filterFn);
-                }
-                return items;
-            } else {
-                console.error(`Supabase query error in ${collection}:`, error);
-            }
-        } catch (e) {
-            console.error("Supabase connection failed:", e);
-        }
-    }
-    // Fallback to local
     return queryCollection(collection, filterFn);
 }
