@@ -3,9 +3,10 @@ import { Search, MapPin, Phone, HelpCircle, BarChart3, Menu, X, User } from 'luc
 
 interface NavbarProps {
     onLoginClick: () => void;
+    setView: (view: string) => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onLoginClick }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onLoginClick, setView }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -54,11 +55,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onLoginClick }) => {
                     {/* Desktop Links */}
                     <div className="hidden lg:flex items-center gap-8">
                         <div className="flex gap-6 text-[13px] font-bold text-slate-700">
-                            {['Savings', 'Cards', 'Loans', 'Mortgages', 'Business', 'Invest'].map((item) => (
-                                <a key={item} href="#" className="hover:text-[#002D72] transition relative group">
-                                    {item}
+                            {[
+                                { name: 'Home', view: 'HOME' },
+                                { name: 'Savings', view: 'SAVINGS' },
+                                { name: 'Cards', view: 'CARDS' },
+                                { name: 'Loans', view: 'LOANS' },
+                                { name: 'Business', view: 'BUSINESS' },
+                                { name: 'Membership', view: 'MEMBERSHIP' }
+                            ].map((item) => (
+                                <button
+                                    key={item.name}
+                                    onClick={() => setView(item.view)}
+                                    className="hover:text-[#002D72] transition relative group"
+                                >
+                                    {item.name}
                                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#002D72] transition-all group-hover:w-full"></span>
-                                </a>
+                                </button>
                             ))}
                         </div>
 
@@ -81,8 +93,21 @@ export const Navbar: React.FC<NavbarProps> = ({ onLoginClick }) => {
             {isMobileMenuOpen && (
                 <div className="lg:hidden bg-white border-t border-slate-100 p-6 animate-in slide-in-from-top-4 duration-300">
                     <div className="flex flex-col gap-4 mb-6">
-                        {['Checking & Savings', 'Credit Cards', 'Loans', 'Mortgages', 'Investing', 'Business Banking'].map((item) => (
-                            <a key={item} href="#" className="text-lg font-bold text-[#002D72] border-b border-slate-50 pb-2">{item}</a>
+                        {[
+                            { name: 'Home', view: 'HOME' },
+                            { name: 'Checking & Savings', view: 'SAVINGS' },
+                            { name: 'Credit Cards', view: 'CARDS' },
+                            { name: 'Personal Loans', view: 'LOANS' },
+                            { name: 'Business Banking', view: 'BUSINESS' },
+                            { name: 'Membership', view: 'MEMBERSHIP' }
+                        ].map((item) => (
+                            <button
+                                key={item.name}
+                                onClick={() => { setView(item.view); setIsMobileMenuOpen(false); }}
+                                className="text-left text-lg font-bold text-[#002D72] border-b border-slate-50 pb-2"
+                            >
+                                {item.name}
+                            </button>
                         ))}
                     </div>
                     <button

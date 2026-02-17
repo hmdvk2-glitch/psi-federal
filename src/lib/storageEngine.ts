@@ -1,4 +1,4 @@
-export type CollectionName = 'admins' | 'customers' | 'transactions' | 'charges' | 'transferCodes';
+export type CollectionName = 'admins' | 'customers' | 'transactions' | 'charges' | 'transferCodes' | 'offers' | 'leads';
 
 export interface BaseRecord {
     id: string;

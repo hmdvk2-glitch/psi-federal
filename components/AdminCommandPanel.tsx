@@ -4,11 +4,15 @@ import { X, Shield, Plus, DollarSign, Users, Lock, ChevronRight, Save, Camera, F
 import { BaseRecord, createRecord, queryCollection, createRecordAsync, queryCollectionAsync } from '../src/lib/storageEngine';
 import { createCustomer, createTransaction, getAllCustomers, DBUser, updateCustomerPassword, updateCustomer, createCustomerAsync, createTransactionAsync, getAllCustomersAsync, updateCustomerPasswordAsync, updateCustomerAsync } from '../src/lib/bankingService';
 import { getTransferCodes, saveTransferCodes, saveTransferCodesAsync, getTransferCodesAsync } from '../src/lib/transferCodeService';
+import { getOffers, getLeads, updateOffer, createOffer, deleteOffer } from '../src/lib/marketingService';
+import { Megaphone, Target, BarChart3, Trash2 } from 'lucide-react';
+import { Offer, Lead } from '../types/marketing';
+import { MarketingManager } from './admin/MarketingManager';
 import { STORAGE_KEYS } from '../storage/authStorage';
 
 const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const { admin } = useAuthSession();
-    const [activeTab, setActiveTab] = useState<'users' | 'transact' | 'admin'>('users');
+    const [activeTab, setActiveTab] = useState<'users' | 'transact' | 'admin' | 'mktg'>('users');
     const [customers, setCustomers] = useState<DBUser[]>([]);
 
     // Form States
@@ -137,6 +141,7 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const tabs = [
         { id: 'users', label: 'User Mgmt', icon: Users, roles: ['SUPER_ADMIN', 'OPS_ADMIN'] },
         { id: 'transact', label: 'Transactions', icon: DollarSign, roles: ['SUPER_ADMIN', 'OPS_ADMIN'] },
+        { id: 'mktg', label: 'Marketing', icon: Megaphone, roles: ['SUPER_ADMIN', 'OPS_ADMIN'] },
         { id: 'admin', label: 'Admin Ops', icon: Shield, roles: ['SUPER_ADMIN', 'OPS_ADMIN'] },
     ];
 
@@ -551,6 +556,10 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                                     </form>
                                 </div>
                             </div>
+                        )}
+
+                        {activeTab === 'mktg' && (
+                            <MarketingManager />
                         )}
                     </div>
                 </div>
