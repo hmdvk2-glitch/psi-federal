@@ -461,51 +461,53 @@ const AdminCommandPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                                     </div>
                                 </div>
 
-                                <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-6">
-                                    <h4 className="font-bold text-[#0B2E4F] mb-4">Provision New Admin</h4>
-                                    <form onSubmit={handleCreateAdmin} className="space-y-4">
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <input
-                                                type="text"
-                                                placeholder="Admin Name"
-                                                value={newAdmin.name}
-                                                onChange={e => setNewAdmin({ ...newAdmin, name: e.target.value })}
-                                                className="p-3 border rounded-lg text-sm"
-                                                required
-                                            />
-                                            <select
-                                                value={newAdmin.role}
-                                                onChange={e => setNewAdmin({ ...newAdmin, role: e.target.value })}
-                                                className="p-3 border rounded-lg text-sm"
-                                            >
-                                                <option value="OPS_ADMIN">Operations Admin</option>
-                                                <option value="SUPER_ADMIN">Super Admin</option>
-                                                <option value="SUPPORT_ADMIN">Support Admin</option>
-                                            </select>
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <input
-                                                type="email"
-                                                placeholder="Email Address"
-                                                value={newAdmin.email}
-                                                onChange={e => setNewAdmin({ ...newAdmin, email: e.target.value })}
-                                                className="p-3 border rounded-lg text-sm"
-                                                required
-                                            />
-                                            <input
-                                                type="text"
-                                                placeholder="Initial Password"
-                                                value={newAdmin.password}
-                                                onChange={e => setNewAdmin({ ...newAdmin, password: e.target.value })}
-                                                className="p-3 border rounded-lg text-sm"
-                                                required
-                                            />
-                                        </div>
-                                        <button type="submit" className="w-full bg-[#0B2E4F] text-white py-2 rounded font-bold text-xs uppercase tracking-widest hover:bg-[#1d4e89] transition">
-                                            Create Admin User
-                                        </button>
-                                    </form>
-                                </div>
+                                {admin.role === 'SUPER_ADMIN' && (
+                                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-6">
+                                        <h4 className="font-bold text-[#0B2E4F] mb-4">Provision New Admin</h4>
+                                        <form onSubmit={handleCreateAdmin} className="space-y-4">
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Admin Name"
+                                                    value={newAdmin.name}
+                                                    onChange={e => setNewAdmin({ ...newAdmin, name: e.target.value })}
+                                                    className="p-3 border rounded-lg text-sm"
+                                                    required
+                                                />
+                                                <select
+                                                    value={newAdmin.role}
+                                                    onChange={e => setNewAdmin({ ...newAdmin, role: e.target.value })}
+                                                    className="p-3 border rounded-lg text-sm"
+                                                >
+                                                    <option value="OPS_ADMIN">Operations Admin</option>
+                                                    <option value="SUPER_ADMIN">Super Admin</option>
+                                                    <option value="SUPPORT_ADMIN">Support Admin</option>
+                                                </select>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <input
+                                                    type="email"
+                                                    placeholder="Email Address"
+                                                    value={newAdmin.email}
+                                                    onChange={e => setNewAdmin({ ...newAdmin, email: e.target.value })}
+                                                    className="p-3 border rounded-lg text-sm"
+                                                    required
+                                                />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Initial Password"
+                                                    value={newAdmin.password}
+                                                    onChange={e => setNewAdmin({ ...newAdmin, password: e.target.value })}
+                                                    className="p-3 border rounded-lg text-sm"
+                                                    required
+                                                />
+                                            </div>
+                                            <button type="submit" className="w-full bg-[#0B2E4F] text-white py-2 rounded font-bold text-xs uppercase tracking-widest hover:bg-[#1d4e89] transition">
+                                                Create Admin User
+                                            </button>
+                                        </form>
+                                    </div>
+                                )}
 
                                 {/* Transfer Codes Section */}
                                 <div className="bg-slate-50 border border-slate-200 rounded-xl p-6">
