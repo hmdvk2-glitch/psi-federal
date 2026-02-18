@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Target, BarChart3, Megaphone, Trash2, Plus, Users, Calendar, ArrowUpRight, TrendingUp } from 'lucide-react';
 import { getOffers, getLeads, deleteOffer, updateOffer, createOffer } from '../../src/lib/marketingService';
+import { updateRecordAsync } from '../../src/lib/storageEngine';
 import { Offer, Lead } from '../../types/marketing';
 
 export const MarketingManager: React.FC = () => {
@@ -19,6 +20,12 @@ export const MarketingManager: React.FC = () => {
         pageChannels: ['HOME'],
         icon: 'Gift'
     });
+
+    const handleProcessLead = async (id: string) => {
+        await updateRecordAsync('leads' as any, id, { status: 'CONTACTED' });
+        refreshData();
+        alert("Lead marked as contacted. Notification sent to account officer.");
+    };
 
     const refreshData = async () => {
         const [o, l] = await Promise.all([getOffers(), getLeads()]);

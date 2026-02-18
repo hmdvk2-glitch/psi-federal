@@ -32,7 +32,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, isAdmin
 
                 if ((normalizedEmail === 'admin@test.com' && password === 'Admin@123') || (normalizedEmail === 'ops@psifederal.com' && password === '1234')) {
                     const isOps = normalizedEmail === 'ops@psifederal.com';
-                    setAdmin({
+                    await setAdmin({
                         id: isOps ? 'admin-ops' : 'admin-1',
                         email: email,
                         password: password,
@@ -49,7 +49,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, isAdmin
             } else {
                 const result = loginCustomer(email, password);
                 if (result) {
-                    setCustomer(result.user);
+                    await setCustomer(result.user);
                     onClose();
                     window.location.reload();
                 } else {

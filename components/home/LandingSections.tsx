@@ -33,25 +33,40 @@ const TrustTile = ({ icon, title, desc }: any) => (
 );
 
 export const MobilePromoSection = () => (
-    <section className="py-24 px-6 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="relative">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[#002D72]/5 rounded-full blur-[100px]"></div>
-                <div className="relative bg-[#001D4D] rounded-[60px] p-12 shadow-2xl border-t border-white/10 max-w-md mx-auto aspect-[9/18] flex flex-col justify-between group">
-                    <div className="bg-white/10 p-6 rounded-3xl backdrop-blur-md">
-                        <p className="text-[10px] font-black text-blue-300 uppercase tracking-widest mb-1">Mirror Status</p>
-                        <p className="text-2xl font-black text-white italic">Active Session</p>
+    <section className="py-32 px-6 bg-[#001D4D] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div className="relative order-2 lg:order-1">
+                <div className="relative z-10 bg-slate-900 w-full max-w-[320px] aspect-[9/19] rounded-[48px] p-4 shadow-[0_0_80px_rgba(0,0,0,0.5)] border-[8px] border-slate-800 mx-auto overflow-hidden group">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-2xl z-20"></div>
+                    <div className="h-full w-full bg-gradient-to-b from-blue-600 to-[#001D4D] rounded-[36px] p-6 flex flex-col justify-between relative">
+                        <div className="mt-8">
+                            <div className="flex justify-between items-center mb-6">
+                                <div className="w-10 h-10 bg-white/20 rounded-full backdrop-blur-md"></div>
+                                <div className="flex gap-1">
+                                    <div className="w-2 h-2 bg-white/40 rounded-full"></div>
+                                    <div className="w-2 h-2 bg-white/40 rounded-full"></div>
+                                </div>
+                            </div>
+                            <p className="text-[10px] font-black text-blue-200 uppercase tracking-widest mb-1 italic">Total Balance</p>
+                            <h4 className="text-3xl font-black text-white italic">₦4,250,000</h4>
+                        </div>
+                        <div className="space-y-4">
+                            <div className="h-12 bg-white/10 rounded-2xl backdrop-blur-md"></div>
+                            <div className="h-12 bg-white/10 rounded-2xl backdrop-blur-md"></div>
+                            <div className="h-12 bg-blue-500 rounded-2xl shadow-lg flex items-center justify-center font-bold text-white uppercase text-xs">Quick Transfer</div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className="space-y-8">
-                <h2 className="text-5xl font-black text-[#002D72] tracking-tight leading-[1.1] italic uppercase">Financial Control <br /><span className="text-[#004A99]">In Real-time</span>.</h2>
-                <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-lg">
-                    Highest rated banking app on the continent. One-tap leads, instant transfers, and biometric security.
+            <div className="text-white space-y-8 order-1 lg:order-2">
+                <h2 className="text-6xl font-black italic tracking-tighter leading-none uppercase">Banking without <br /><span className="text-blue-400">Boundaries</span>.</h2>
+                <p className="text-blue-100/60 text-xl font-medium leading-relaxed max-w-lg">
+                    Manage your assets with the most advanced mobile core in Africa. Biometric security, instant lead activation, and zero-fee transfers.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                <div className="flex flex-col sm:flex-row gap-4 pt-10">
                     <AppStoreButton platform="App Store" />
-                    <AppStoreButton platform="Play Store" />
+                    <AppStoreButton platform="Google Play" />
                 </div>
             </div>
         </div>

@@ -149,11 +149,12 @@ export const SmartForm: React.FC<SmartFormProps> = ({ offer, onClose }) => {
                     </div>
                 </div>
 
-                <div className="p-4 bg-blue-50/50 rounded-2xl flex items-start gap-4 border border-blue-100">
-                    <ShieldCheck className="text-[#0A1F44] mt-0.5" size={20} />
+                <div className="p-4 bg-slate-50 rounded-2xl flex items-start gap-4 border border-slate-100">
+                    <ShieldCheck className="text-[#0A1F44] mt-0.5 shrink-0" size={20} />
                     <div className="text-[10px] text-slate-500 font-medium leading-relaxed uppercase tracking-tighter">
-                        By submitting, you agree to PSI Federal Trust regulatory audits. Your data is encrypted via 256-bit bank-grade security protocols.
-                        Verification may include credit bureau scoring.
+                        PSI Federal Trust is licensed by the Central Bank and insured by the NDIC up to ₦500k.
+                        By submitting, you agree to our Terms of Service and Privacy Policy.
+                        Identity verification (KYC/BVN) is required for all applications.
                     </div>
                 </div>
 

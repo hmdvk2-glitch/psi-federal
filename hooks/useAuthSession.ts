@@ -4,18 +4,19 @@
 import { useEffect, useState } from "react";
 import { AdminUser, CustomerUser } from "../types/authTypes";
 import { STORAGE_KEYS } from "../storage/authStorage";
+import { pullFromCloud, setSyncIdentity, clearSyncIdentity } from "../src/lib/storageEngine";
 
 type AdminStoredShape =
   | AdminUser
   | {
-      user?: AdminUser;
-    };
+    user?: AdminUser;
+  };
 
 type CustomerStoredShape =
   | CustomerUser
   | {
-      user?: CustomerUser;
-    };
+    user?: CustomerUser;
+  };
 
 function safeParse<T>(value: string | null): T | null {
   if (!value) return null;
@@ -61,14 +62,24 @@ export function useAuthSession() {
     setIsLoading(false);
   }, []);
 
-  const loginAdmin = (adminUser: AdminUser): void => {
+  const loginAdmin = async (adminUser: AdminUser): Promise<void> => {
+    // Before saving session, try to pull data for this user
+    const cloudUser = `admin_${adminUser.email.replace(/[@.]/g, '_')}`;
+    await pullFromCloud(cloudUser);
+    setSyncIdentity(cloudUser);
+
     localStorage.removeItem(STORAGE_KEYS.CURRENT_CUSTOMER);
     localStorage.setItem(STORAGE_KEYS.CURRENT_ADMIN, JSON.stringify(adminUser));
     setCustomer(null);
     setAdmin(adminUser);
   };
 
-  const loginCustomer = (customerUser: CustomerUser): void => {
+  const loginCustomer = async (customerUser: CustomerUser): Promise<void> => {
+    // Cloud identity based on account number or email
+    const cloudUser = `user_${customerUser.accountNumber}`;
+    await pullFromCloud(cloudUser);
+    setSyncIdentity(cloudUser);
+
     localStorage.removeItem(STORAGE_KEYS.CURRENT_ADMIN);
     localStorage.setItem(STORAGE_KEYS.CURRENT_CUSTOMER, JSON.stringify(customerUser));
     setAdmin(null);
@@ -76,6 +87,7 @@ export function useAuthSession() {
   };
 
   const logout = (): void => {
+    clearSyncIdentity();
     localStorage.removeItem(STORAGE_KEYS.CURRENT_ADMIN);
     localStorage.removeItem(STORAGE_KEYS.CURRENT_CUSTOMER);
     setAdmin(null);

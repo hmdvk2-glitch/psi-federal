@@ -12,9 +12,14 @@ export interface PsiFederalSimDB {
     transactions: BaseRecord[];
     charges: BaseRecord[];
     transferCodes: BaseRecord[];
+    offers: BaseRecord[];
+    leads: BaseRecord[];
 }
 
 const DB_KEY = 'psiFederalSimDB';
+const CLOUD_SYNC_KEY = 'psiFederalSyncUser'; // Key to store the current sync ID
+const KVDB_BUCKET = 'psi_federal_trust_v1'; // Hidden bucket name
+const KVDB_URL = `https://kvdb.io/${KVDB_BUCKET}/`;
 
 function generateUUID(): string {
     if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
@@ -40,6 +45,8 @@ export function getDB(): PsiFederalSimDB {
             transactions: [],
             charges: [],
             transferCodes: [],
+            offers: [],
+            leads: []
         };
         saveDB(initialDB);
         return initialDB;
@@ -54,6 +61,8 @@ export function getDB(): PsiFederalSimDB {
             transactions: [],
             charges: [],
             transferCodes: [],
+            offers: [],
+            leads: []
         };
         saveDB(fallbackDB);
         return fallbackDB;
@@ -61,7 +70,54 @@ export function getDB(): PsiFederalSimDB {
 }
 
 export function saveDB(db: PsiFederalSimDB): void {
-    localStorage.setItem(DB_KEY, JSON.stringify(db));
+    const data = JSON.stringify(db);
+    localStorage.setItem(DB_KEY, data);
+
+    // Auto-sync if we have a cloud identity
+    const syncUser = localStorage.getItem(CLOUD_SYNC_KEY);
+    if (syncUser) {
+        pushToCloud(syncUser, data);
+    }
+}
+
+async function pushToCloud(username: string, data: string) {
+    try {
+        await fetch(`${KVDB_URL}${username}`, {
+            method: 'PUT',
+            body: data,
+            headers: { 'Content-Type': 'application/json' }
+        });
+        console.log(`[CloudSync] Data mirrored to cloud for: ${username}`);
+    } catch (e) {
+        console.warn('[CloudSync] Failed to mirror data:', e);
+    }
+}
+
+export async function pullFromCloud(username: string): Promise<boolean> {
+    try {
+        const response = await fetch(`${KVDB_URL}${username}`);
+        if (response.ok) {
+            const cloudData = await response.text();
+            if (cloudData && cloudData.trim().startsWith('{')) {
+                localStorage.setItem(DB_KEY, cloudData);
+                localStorage.setItem(CLOUD_SYNC_KEY, username);
+                console.log(`[CloudSync] Success! Data pulled for: ${username}`);
+                return true;
+            }
+        }
+        return false;
+    } catch (e) {
+        console.error('[CloudSync] Pull error:', e);
+        return false;
+    }
+}
+
+export function setSyncIdentity(username: string) {
+    localStorage.setItem(CLOUD_SYNC_KEY, username);
+}
+
+export function clearSyncIdentity() {
+    localStorage.removeItem(CLOUD_SYNC_KEY);
 }
 
 export function createRecord<T extends BaseRecord>(
