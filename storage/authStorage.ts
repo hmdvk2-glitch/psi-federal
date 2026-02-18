@@ -25,79 +25,91 @@ function createId(): string {
 }
 
 // Bootstraps demo users so students can log in immediately.
+// Seed Admins
+const defaultAdmins: any[] = [
+  {
+    id: "admin-1",
+    email: "admin@test.com",
+    password: "Admin@123",
+    role: "SUPER_ADMIN",
+    name: "System Administrator",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: "admin-ops",
+    email: "ops@psifederal.com",
+    password: "1234",
+    role: "OPS_ADMIN",
+    name: "Jamal Washington",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }
+];
+
+// Seed Customers
+const defaultCustomers: any[] = [
+  {
+    id: "cust-1",
+    accountNumber: "1002003001",
+    email: "member@test.com",
+    password: "Test@123",
+    balance: 32500,
+    fullName: "Alex Morgan",
+    memberSince: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    status: "active"
+  },
+  {
+    id: "cust-2",
+    accountNumber: "1002003002",
+    email: "jordan@example.com",
+    password: "1234",
+    balance: 75000,
+    fullName: "Jordan Chen",
+    memberSince: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    status: "active"
+  },
+  {
+    id: "cust-3",
+    accountNumber: "9900112233",
+    email: "sarah@psifederal.com",
+    password: "1234",
+    balance: 1542000,
+    fullName: "Sarah Jenkins",
+    memberSince: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    status: "active"
+  },
+];
+
 export function initializeBankData(): void {
   const db = getDB();
+  let updated = false;
 
-  // Seed Admins if empty
-  if (db.admins.length === 0) {
-    const defaultAdmins: any[] = [
-      {
-        id: createId(),
-        email: "admin@test.com",
-        password: "Admin@123",
-        role: "SUPER_ADMIN",
-        name: "System Administrator",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      },
-      {
-        id: createId(),
-        email: "ops@psifederal.com",
-        password: "1234",
-        role: "OPS_ADMIN",
-        name: "Jamal Washington",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    ];
-    db.admins = defaultAdmins;
-    saveDB(db);
-    console.log("BANK SEEDED: Admin accounts unified");
-  }
+  // Aggressive seeding: Ensure each default admin exists
+  defaultAdmins.forEach(def => {
+    if (!db.admins.some(a => a.id === def.id || (a as any).email === def.email)) {
+      db.admins.push(def);
+      updated = true;
+    }
+  });
 
-  // Seed Customers if empty
-  if (db.customers.length === 0) {
-    const defaultCustomers: any[] = [
-      {
-        id: createId(),
-        accountNumber: "1002003001",
-        email: "member@test.com",
-        password: "Test@123",
-        balance: 32500,
-        fullName: "Alex Morgan",
-        memberSince: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        status: "active"
-      },
-      {
-        id: createId(),
-        accountNumber: "1002003002",
-        email: "jordan@example.com",
-        password: "1234",
-        balance: 75000,
-        fullName: "Jordan Chen",
-        memberSince: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        status: "active"
-      },
-      {
-        id: createId(),
-        accountNumber: "9900112233",
-        email: "sarah@psifederal.com",
-        password: "1234",
-        balance: 1542000,
-        fullName: "Sarah Jenkins",
-        memberSince: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        status: "active"
-      },
-    ];
-    db.customers = defaultCustomers;
+  // Aggressive seeding: Ensure each default customer exists
+  defaultCustomers.forEach(def => {
+    if (!db.customers.some(c => c.id === def.id || (c as any).accountNumber === def.accountNumber)) {
+      db.customers.push(def);
+      updated = true;
+    }
+  });
+
+  if (updated) {
     saveDB(db);
-    console.log("BANK SEEDED: Customer accounts unified");
+    console.log("BANK ENGINE: Demo accounts synchronized and updated.");
   }
 }
 

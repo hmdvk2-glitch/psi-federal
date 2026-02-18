@@ -47,7 +47,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, isAdmin
                     setError('Invalid Administration Credentials');
                 }
             } else {
-                const result = loginCustomer(email, password);
+                const normalizedIdentity = email.trim();
+                const result = loginCustomer(normalizedIdentity, password);
                 if (result) {
                     await setCustomer(result.user);
                     onClose();
