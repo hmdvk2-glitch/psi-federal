@@ -1,121 +1,196 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ShieldCheck, Zap, Globe } from 'lucide-react';
 import { heroSlides } from '../../data/heroSlides';
 
 interface HeroCarouselProps {
     onLoginClick?: () => void;
 }
 
-const HeroCarousel: React.FC<HeroCarouselProps> = ({ onLoginClick }) => {
+export const HeroCarousel: React.FC<HeroCarouselProps> = ({ onLoginClick }) => {
     const [current, setCurrent] = useState(0);
+    const [progress, setProgress] = useState(0);
 
     useEffect(() => {
+        const interval = 6000;
+        const step = 100;
+        const stepTime = interval / step;
+
         const timer = setInterval(() => {
-            setCurrent((prev) => (prev + 1) % heroSlides.length);
-        }, 5500);
+            setProgress((p) => {
+                if (p >= 100) {
+                    setCurrent((prev) => (prev + 1) % heroSlides.length);
+                    return 0;
+                }
+                return p + 1;
+            });
+        }, stepTime);
+
         return () => clearInterval(timer);
     }, []);
 
-    const nextSlide = () => setCurrent((prev) => (prev + 1) % heroSlides.length);
-    const prevSlide = () => setCurrent((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+    const nextSlide = () => {
+        setCurrent((prev) => (prev + 1) % heroSlides.length);
+        setProgress(0);
+    };
+
+    const prevSlide = () => {
+        setCurrent((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+        setProgress(0);
+    };
 
     return (
-        <div className="relative h-[85vh] w-full overflow-hidden bg-slate-900 group">
+        <div className="relative h-[90vh] w-full overflow-hidden bg-[#001D4D] group select-none">
             <AnimatePresence mode='wait'>
                 <motion.div
                     key={current}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.8 }}
+                    transition={{ duration: 1.2, ease: "easeInOut" }}
                     className="absolute inset-0"
                 >
-                    <img
+                    {/* Premium Background Image with Parallax-like scale */}
+                    <motion.img
+                        initial={{ scale: 1.1 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 10, ease: "linear" }}
                         src={heroSlides[current].image}
-                        alt={heroSlides[current].headline}
+                        alt=""
                         className="w-full h-full object-cover"
-                        loading={current === 0 ? "eager" : "lazy"}
-                    />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/40 to-transparent z-10"
-                        style={{ opacity: heroSlides[current].overlayOpacity + 0.3 }}
                     />
 
-                    <div className={`absolute inset-0 flex items-center p-6 md:p-20 ${heroSlides[current].alignment === 'left' ? 'justify-start' :
-                        heroSlides[current].alignment === 'right' ? 'justify-end' : 'justify-center'
-                        }`}>
-                        <div className={`max-w-4xl text-white space-y-8 ${heroSlides[current].alignment === 'center' ? 'text-center' : 'text-left'
-                            }`}>
-                            <motion.span
-                                initial={{ y: 20, opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                transition={{ delay: 0.3 }}
-                                className="inline-block px-4 py-1.5 bg-blue-600/20 backdrop-blur-md rounded-full text-blue-300 text-sm font-bold tracking-widest uppercase border border-blue-500/30"
-                            >
-                                {heroSlides[current].eyebrow}
-                            </motion.span>
-                            <motion.h1
+                    {/* Gradient Overlays for Readability */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#001D4D] via-[#001D4D]/60 to-transparent z-10" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#001D4D] via-transparent to-transparent z-10 opacity-60" />
+
+                    {/* Content Container */}
+                    <div className="absolute inset-0 z-20 flex items-center px-6 md:px-20 lg:px-32">
+                        <div className={`max-w-5xl w-full ${heroSlides[current].alignment === 'center' ? 'mx-auto text-center' :
+                            heroSlides[current].alignment === 'right' ? 'ml-auto text-right' : 'text-left'}`}>
+
+                            <motion.div
                                 initial={{ y: 30, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
-                                transition={{ delay: 0.5 }}
-                                className="text-5xl md:text-8xl font-black leading-tight tracking-tight"
+                                transition={{ delay: 0.2 }}
+                                className={`flex items-center gap-3 mb-6 ${heroSlides[current].alignment === 'center' ? 'justify-center' :
+                                    heroSlides[current].alignment === 'right' ? 'justify-end' : 'justify-start'}`}
                             >
-                                {heroSlides[current].headline}
-                            </motion.h1>
-                            <motion.p
+                                <div className="h-px w-8 bg-[#FFB81C]" />
+                                <span className="text-[#FFB81C] text-sm font-black uppercase tracking-[0.3em]">
+                                    {heroSlides[current].eyebrow}
+                                </span>
+                            </motion.div>
+
+                            <motion.h1
                                 initial={{ y: 40, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
-                                transition={{ delay: 0.7 }}
-                                className="text-xl md:text-2xl text-slate-300 font-medium max-w-2xl leading-relaxed"
+                                transition={{ delay: 0.4 }}
+                                className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-[0.95] tracking-tighter mb-8 italic uppercase"
+                            >
+                                {heroSlides[current].headline.split('.').map((part, i) => (
+                                    <span key={i} className="block">{part}{i === 0 && '.'}</span>
+                                ))}
+                            </motion.h1>
+
+                            <motion.p
+                                initial={{ y: 30, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ delay: 0.6 }}
+                                className="text-lg md:text-xl text-blue-100 font-medium max-w-2xl mb-12 leading-relaxed opacity-80"
                             >
                                 {heroSlides[current].subtext}
                             </motion.p>
+
                             <motion.div
-                                initial={{ y: 50, opacity: 0 }}
+                                initial={{ y: 30, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
-                                transition={{ delay: 0.9 }}
-                                className={`flex flex-col sm:flex-row gap-6 pt-4 ${heroSlides[current].alignment === 'center' ? 'justify-center' : 'justify-start'
-                                    }`}
+                                transition={{ delay: 0.8 }}
+                                className={`flex flex-col sm:flex-row gap-6 ${heroSlides[current].alignment === 'center' ? 'justify-center' :
+                                    heroSlides[current].alignment === 'right' ? 'justify-end' : 'justify-start'}`}
                             >
                                 <button
                                     onClick={onLoginClick}
-                                    className="px-10 py-5 bg-[#002D72] text-white font-bold rounded-2xl hover:bg-[#003da1] transition-all hover:scale-105 shadow-xl shadow-blue-900/20"
+                                    className="px-10 py-5 bg-white text-[#001D4D] font-black rounded-2xl hover:bg-[#FFB81C] transition-all transform hover:-translate-y-1 shadow-2xl flex items-center justify-center gap-3 uppercase tracking-widest text-xs"
                                 >
                                     {heroSlides[current].ctaPrimary.text}
+                                    <Zap size={18} fill="currentColor" />
                                 </button>
-                                <button className="px-10 py-5 bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold rounded-2xl hover:bg-white/20 transition-all hover:scale-105">
+                                <button className="px-10 py-5 bg-white/10 backdrop-blur-xl border border-white/20 text-white font-black rounded-2xl hover:bg-white/20 transition-all uppercase tracking-widest text-xs">
                                     {heroSlides[current].ctaSecondary.text}
                                 </button>
+                            </motion.div>
+
+                            {/* Floating Stats / Trust Badges */}
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 1, duration: 0.8 }}
+                                className={`mt-20 flex gap-8 ${heroSlides[current].alignment === 'center' ? 'justify-center' :
+                                    heroSlides[current].alignment === 'right' ? 'justify-end' : 'justify-start'}`}
+                            >
+                                <div className="flex items-center gap-4 bg-white/5 backdrop-blur-md p-4 rounded-2xl border border-white/10">
+                                    <div className="w-12 h-12 bg-[#FFB81C] rounded-xl flex items-center justify-center text-[#001D4D]">
+                                        <ShieldCheck size={28} />
+                                    </div>
+                                    <div className="text-left">
+                                        <p className="text-2xl font-black text-white leading-none">{heroSlides[current].statValue}</p>
+                                        <p className="text-[10px] text-blue-200 font-bold uppercase tracking-widest">{heroSlides[current].statLabel}</p>
+                                    </div>
+                                </div>
+
+                                <div className="hidden md:flex items-center gap-4 bg-white/5 backdrop-blur-md p-4 rounded-2xl border border-white/10">
+                                    <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center text-white">
+                                        <Globe size={28} />
+                                    </div>
+                                    <div className="text-left">
+                                        <p className="text-2xl font-black text-white leading-none">Global</p>
+                                        <p className="text-[10px] text-blue-200 font-bold uppercase tracking-widest">Access Protocol</p>
+                                    </div>
+                                </div>
                             </motion.div>
                         </div>
                     </div>
                 </motion.div>
             </AnimatePresence>
 
-            {/* Navigation Buttons */}
-            <button
-                onClick={prevSlide}
-                className="absolute left-8 top-1/2 -translate-y-1/2 p-4 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/20 backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 hidden md:block"
-            >
-                <ChevronLeft size={32} />
-            </button>
-            <button
-                onClick={nextSlide}
-                className="absolute right-8 top-1/2 -translate-y-1/2 p-4 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/20 backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 hidden md:block"
-            >
-                <ChevronRight size={32} />
-            </button>
+            {/* Navigation Controls */}
+            <div className="absolute bottom-12 right-12 z-30 flex items-center gap-6">
+                <div className="flex gap-2">
+                    <button
+                        onClick={prevSlide}
+                        className="w-12 h-12 rounded-full border border-white/20 text-white flex items-center justify-center hover:bg-white/10 transition"
+                    >
+                        <ChevronLeft size={20} />
+                    </button>
+                    <button
+                        onClick={nextSlide}
+                        className="w-12 h-12 rounded-full border border-white/20 text-white flex items-center justify-center hover:bg-white/10 transition"
+                    >
+                        <ChevronRight size={20} />
+                    </button>
+                </div>
 
-            {/* Pagination Dots */}
-            <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex gap-4 z-20">
-                {heroSlides.map((_, idx) => (
+                <div className="flex items-center gap-4">
+                    <span className="text-white/40 font-mono text-sm">0{current + 1}</span>
+                    <div className="w-32 h-1 bg-white/10 rounded-full overflow-hidden">
+                        <motion.div
+                            className="h-full bg-[#FFB81C]"
+                            style={{ width: `${progress}%` }}
+                        />
+                    </div>
+                    <span className="text-white/40 font-mono text-sm">0{heroSlides.length}</span>
+                </div>
+            </div>
+
+            {/* Pagination Thumbnails (Decorative) */}
+            <div className="absolute left-12 bottom-12 z-30 hidden lg:flex gap-4">
+                {heroSlides.map((slide, idx) => (
                     <button
                         key={idx}
-                        onClick={() => setCurrent(idx)}
-                        className={`transition-all duration-500 rounded-full ${current === idx ? "w-12 h-3 bg-[#002D72]" : "w-3 h-3 bg-white/30 hover:bg-white/50"
-                            }`}
+                        onClick={() => { setCurrent(idx); setProgress(0); }}
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${current === idx ? "bg-[#FFB81C] w-8" : "bg-white/20 hover:bg-white/40"}`}
                     />
                 ))}
             </div>

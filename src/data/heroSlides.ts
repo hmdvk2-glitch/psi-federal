@@ -9,40 +9,48 @@ export interface HeroSlide {
     ctaSecondary: { text: string; link: string };
     alignment: 'left' | 'center' | 'right';
     overlayOpacity: number;
+    statValue?: string;
+    statLabel?: string;
 }
 
 export const heroSlides: HeroSlide[] = [
     {
         id: 1,
-        image: "https://images.unsplash.com/photo-1549421263-52495adc454c?q=80&w=1974&auto=format&fit=crop",
-        eyebrow: "Elite Financial Power",
-        headline: "PSI Federal CU: The Future of Banking",
-        subtext: "Experience institution-grade banking that moves as fast as you do with PSI Federal CU's advanced digital ecosystem.",
-        ctaPrimary: { text: "Secure Your Future", link: "/register" },
-        ctaSecondary: { text: "Explore Benefits", link: "/about" },
-        alignment: "center",
-        overlayOpacity: 0.3
+        image: "https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?q=80&w=2070&auto=format&fit=crop",
+        eyebrow: "Elite Federal Credit Union",
+        headline: "Institutional Grade Banking Power.",
+        subtext: "Experience the precision of PSI Federal CU. Our advanced core manages over $14B in assets with millisecond latency and federal-grade security.",
+        ctaPrimary: { text: "Open Elite Account", link: "/register" },
+        ctaSecondary: { text: "Institutional Rates", link: "/about" },
+        alignment: "left",
+        overlayOpacity: 0.4,
+        statValue: "$14.2B",
+        statLabel: "Assets Managed"
     },
     {
         id: 2,
-        image: "https://images.unsplash.com/photo-1551135049-8a33b5883817?q=80&w=2070&auto=format&fit=crop",
-        eyebrow: "Institutional Wealth",
-        headline: "Building Generational Security",
-        subtext: "Secure your legacy with our trusted wealth management and federal-grade asset protection.",
-        ctaPrimary: { text: "Open High-Yield Account", link: "/register" },
-        ctaSecondary: { text: "View Performance", link: "/rates" },
-        alignment: "left",
-        overlayOpacity: 0.4
+        image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=2071&auto=format&fit=crop",
+        eyebrow: "Wealth Management",
+        headline: "Preserving Legacy Across Generations.",
+        subtext: "Sophisticated asset protection and growth strategies designed for the high-net-worth member. Insured by NCUA up to $250,000.",
+        ctaPrimary: { text: "Private Banking", link: "/register" },
+        ctaSecondary: { text: "View Portfolio Services", link: "/rates" },
+        alignment: "center",
+        overlayOpacity: 0.5,
+        statValue: "18.5%",
+        statLabel: "APY Yield Boost"
     },
     {
         id: 3,
-        image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=2070&auto=format&fit=crop",
-        eyebrow: "Total Asset Protection",
-        headline: "Peace of Mind, Guaranteed",
-        subtext: "Retire with absolute confidence knowing your assets are shielded by our industry-leading security protocols.",
-        ctaPrimary: { text: "Start Planning", link: "/retirement" },
-        ctaSecondary: { text: "Security Audit", link: "/contact" },
+        image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop",
+        eyebrow: "Global Operations",
+        headline: "Banking Without Boundaries.",
+        subtext: "Access your capital globally with zero transaction fees and real-time fraud monitoring. The definitive digital core for modern members.",
+        ctaPrimary: { text: "Get Mobile App", link: "/retirement" },
+        ctaSecondary: { text: "Security Protocols", link: "/contact" },
         alignment: "right",
-        overlayOpacity: 0.3
+        overlayOpacity: 0.4,
+        statValue: "24/7",
+        statLabel: "Fraud Shield"
     }
 ];
