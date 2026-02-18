@@ -17,15 +17,7 @@ function safeParse<T>(value: string | null, fallback: T): T {
   }
 }
 
-function createId(): string {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return crypto.randomUUID();
-  }
-  return `id-${Math.random().toString(36).slice(2, 10)}`;
-}
-
-// Bootstraps demo users so students can log in immediately.
-// Seed Admins
+// Demo Data Definitions
 const defaultAdmins: any[] = [
   {
     id: "admin-1",
@@ -47,7 +39,6 @@ const defaultAdmins: any[] = [
   }
 ];
 
-// Seed Customers
 const defaultCustomers: any[] = [
   {
     id: "cust-1",
@@ -91,17 +82,17 @@ export function initializeBankData(): void {
   const db = getDB();
   let updated = false;
 
-  // Aggressive seeding: Ensure each default admin exists
+  // Add admins if they don't exist
   defaultAdmins.forEach(def => {
-    if (!db.admins.some(a => a.id === def.id || (a as any).email === def.email)) {
+    if (!db.admins.find(a => (a as any).email === def.email || a.id === def.id)) {
       db.admins.push(def);
       updated = true;
     }
   });
 
-  // Aggressive seeding: Ensure each default customer exists
+  // Add customers if they don't exist
   defaultCustomers.forEach(def => {
-    if (!db.customers.some(c => c.id === def.id || (c as any).accountNumber === def.accountNumber)) {
+    if (!db.customers.find(c => (c as any).accountNumber === def.accountNumber || c.id === def.id)) {
       db.customers.push(def);
       updated = true;
     }
@@ -109,7 +100,7 @@ export function initializeBankData(): void {
 
   if (updated) {
     saveDB(db);
-    console.log("BANK ENGINE: Demo accounts synchronized and updated.");
+    console.log("BANK ENGINE: Core demo accounts validated.");
   }
 }
 
@@ -153,24 +144,20 @@ export function loginAdmin(email: string, password: string): AuthSession<AdminUs
     role: admin.role,
   };
 
-  // Keep only one active user context at a time.
   localStorage.removeItem(STORAGE_KEYS.CURRENT_CUSTOMER);
   localStorage.setItem(STORAGE_KEYS.CURRENT_ADMIN, JSON.stringify(session));
   return session;
 }
 
-export function loginCustomer(
-  identity: string,
-  password: string,
-): AuthSession<CustomerUser> | null {
-  // Check for direct match (Email or Full Account Number) OR partial match (Numbers only)
-  const customer = getCustomers().find(
+export function loginCustomer(identity: string, password: string): AuthSession<CustomerUser> | null {
+  const allCustomers = getCustomers();
+  const customer = allCustomers.find(
     (c) => (
       c.accountNumber === identity ||
-      c.accountNumber === `ACCT-${identity}` ||
       c.email.toLowerCase() === identity.toLowerCase()
     ) && c.password === password
   );
+
   if (!customer) return null;
 
   const session: AuthSession<CustomerUser> = {
@@ -199,4 +186,3 @@ export function getCurrentRole(): UserRole | null {
   if (customer) return customer.role;
   return null;
 }
-
