@@ -114,7 +114,7 @@ export const SmartForm: React.FC<SmartFormProps> = ({ offer, onClose }) => {
                                 required
                                 onChange={handleInputChange}
                                 className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0A1F44] outline-none text-sm transition-all"
-                                placeholder="+234 ..."
+                                placeholder="+1 ..."
                             />
                         </div>
                     </div>
@@ -129,7 +129,7 @@ export const SmartForm: React.FC<SmartFormProps> = ({ offer, onClose }) => {
                                     required
                                     onChange={handleInputChange}
                                     className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0A1F44] outline-none text-sm transition-all"
-                                    placeholder="₦ 0.00"
+                                    placeholder="$ 0.00"
                                 />
                             </div>
                         </div>
@@ -152,7 +152,7 @@ export const SmartForm: React.FC<SmartFormProps> = ({ offer, onClose }) => {
                 <div className="p-4 bg-slate-50 rounded-2xl flex items-start gap-4 border border-slate-100">
                     <ShieldCheck className="text-[#0A1F44] mt-0.5 shrink-0" size={20} />
                     <div className="text-[10px] text-slate-500 font-medium leading-relaxed uppercase tracking-tighter">
-                        PSI Federal Trust is licensed by the Central Bank and insured by the NDIC up to ₦500k.
+                        PSI Federal Trust is licensed by the Central Bank and insured by the NDIC up to $500k.
                         By submitting, you agree to our Terms of Service and Privacy Policy.
                         Identity verification (KYC/BVN) is required for all applications.
                     </div>

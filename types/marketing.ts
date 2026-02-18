@@ -25,7 +25,7 @@ export interface Offer extends BaseRecord {
     type: OfferType;
     title: string;
     description: string;
-    value: string; // e.g. "8%", "₦50,000", "0.5% Off"
+    value: string; // e.g. "8%", "$50,000", "0.5% Off"
     startDate: string;
     endDate: string;
     eligibility: string;

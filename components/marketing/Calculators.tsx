@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Calculator, TrendingUp, Calendar, Zap } from 'lucide-react';
 
 export const SavingsCalculator: React.FC = () => {
-    const [amount, setAmount] = useState(1000000); // ₦1m
+    const [amount, setAmount] = useState(1000000); // $1m
     const [months, setMonths] = useState(12);
     const [rate, setRate] = useState(18); // 18%
     const [result, setResult] = useState({ interest: 0, total: 0 });
@@ -25,7 +25,7 @@ export const SavingsCalculator: React.FC = () => {
                 <div className="space-y-2">
                     <div className="flex justify-between">
                         <label className="text-xs font-black text-slate-500 uppercase tracking-widest">Initial Deposit</label>
-                        <span className="text-sm font-black text-[#0A1F44]">₦{amount.toLocaleString()}</span>
+                        <span className="text-sm font-black text-[#0A1F44]">${amount.toLocaleString()}</span>
                     </div>
                     <input
                         type="range" min="10000" max="10000000" step="10000"
@@ -50,11 +50,11 @@ export const SavingsCalculator: React.FC = () => {
             <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Total Interest</p>
-                    <p className="text-xl font-black text-green-600">₦{result.interest.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                    <p className="text-xl font-black text-green-600">${result.interest.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
                 </div>
                 <div className="p-4 bg-[#0A1F44] rounded-2xl">
                     <p className="text-[10px] text-blue-200 font-bold uppercase tracking-widest mb-1">Maturity Value</p>
-                    <p className="text-xl font-black text-white">₦{result.total.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                    <p className="text-xl font-black text-white">${result.total.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@ export const LoanCalculator: React.FC = () => {
                 <div className="space-y-2">
                     <div className="flex justify-between">
                         <label className="text-xs font-black text-slate-500 uppercase tracking-widest">Loan Amount</label>
-                        <span className="text-sm font-black text-[#0A1F44]">₦{amount.toLocaleString()}</span>
+                        <span className="text-sm font-black text-[#0A1F44]">${amount.toLocaleString()}</span>
                     </div>
                     <input
                         type="range" min="100000" max="50000000" step="100000"
@@ -122,7 +122,7 @@ export const LoanCalculator: React.FC = () => {
                     <Zap size={80} />
                 </div>
                 <p className="text-[10px] text-blue-300 font-bold uppercase tracking-widest mb-2">Monthly Repayment</p>
-                <p className="text-4xl font-black text-white mb-2 italic">₦{repayment.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                <p className="text-4xl font-black text-white mb-2 italic">${repayment.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
                 <p className="text-[10px] text-blue-200/60 font-medium">Estimated value. Final rate subject to credit scoring.</p>
             </div>
         </div>

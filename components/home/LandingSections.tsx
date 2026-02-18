@@ -49,7 +49,7 @@ export const MobilePromoSection = () => (
                                 </div>
                             </div>
                             <p className="text-[10px] font-black text-blue-200 uppercase tracking-widest mb-1 italic">Total Balance</p>
-                            <h4 className="text-3xl font-black text-white italic">₦4,250,000</h4>
+                            <h4 className="text-3xl font-black text-white italic">$4,250,000</h4>
                         </div>
                         <div className="space-y-4">
                             <div className="h-12 bg-white/10 rounded-2xl backdrop-blur-md"></div>
@@ -62,7 +62,7 @@ export const MobilePromoSection = () => (
             <div className="text-white space-y-8 order-1 lg:order-2">
                 <h2 className="text-6xl font-black italic tracking-tighter leading-none uppercase">Banking without <br /><span className="text-blue-400">Boundaries</span>.</h2>
                 <p className="text-blue-100/60 text-xl font-medium leading-relaxed max-w-lg">
-                    Manage your assets with the most advanced mobile core in Africa. Biometric security, instant lead activation, and zero-fee transfers.
+                    Manage your assets with the most advanced mobile banking core. Biometric security, instant lead activation, and zero-fee transfers.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 pt-10">
                     <AppStoreButton platform="App Store" />

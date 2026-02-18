@@ -64,7 +64,7 @@ export const MarketingManager: React.FC = () => {
                     <div className="space-y-1">
                         <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest pl-1">Offer Title</label>
                         <input className="w-full p-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-[#0B2E4F]"
-                            placeholder="e.g. ₦50k Welcome Bonus" required
+                            placeholder="e.g. $50k Welcome Bonus" required
                             onChange={e => setNewOffer({ ...newOffer, title: e.target.value })} />
                     </div>
                     <div className="space-y-1">
