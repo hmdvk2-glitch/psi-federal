@@ -39,10 +39,12 @@ export async function getLeads(): Promise<Lead[]> {
 }
 
 async function initDemoOffers() {
+    const existing = await queryCollectionAsync<Offer>(OFFERS_COLLECTION);
+
     const demos: Omit<Offer, 'id' | 'createdAt' | 'updatedAt'>[] = [
         {
             type: 'WELCOME_BONUS',
-            title: '$50,000 Welcome Bonus',
+            title: 'PSI Federal CU: $50,000 Welcome Bonus',
             description: 'Open a premium account today and get a cash bonus after your first deposit.',
             value: '$50,000',
             startDate: new Date().toISOString(),
@@ -52,13 +54,14 @@ async function initDemoOffers() {
             ctaDestination: 'ACCOUNT_FORM',
             status: 'ACTIVE',
             pageChannels: ['HOME', 'PERSONAL', 'MEMBERSHIP'],
-            icon: 'Gift'
+            icon: 'Gift',
+            bannerImage: 'https://images.unsplash.com/photo-1559526324-593bc853d999?q=80&w=2070&auto=format&fit=crop'
         },
         {
             type: 'INTEREST_BOOST',
-            title: 'Fixed Deposit Boost: 18% APY',
+            title: 'PSI Federal CU: 18.5% APY Boost',
             description: 'Grow your wealth faster with our limited-time interest rates on 12-month deposits.',
-            value: '18%',
+            value: '18.5%',
             startDate: new Date().toISOString(),
             endDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
             eligibility: 'All customers. Min amount $1m.',
@@ -66,25 +69,18 @@ async function initDemoOffers() {
             ctaDestination: 'PROMO_FORM',
             status: 'ACTIVE',
             pageChannels: ['HOME', 'SAVINGS'],
-            icon: 'TrendingUp'
-        },
-        {
-            type: 'LOAN_DISCOUNT',
-            title: 'Business Expansion Loans @ 12%',
-            description: 'Special low-interest rates for SMEs and growing businesses this quarter.',
-            value: '12%',
-            startDate: new Date().toISOString(),
-            endDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
-            eligibility: 'Verified business accounts only.',
-            ctaText: 'Check Eligibility',
-            ctaDestination: 'LOAN_FORM',
-            status: 'ACTIVE',
-            pageChannels: ['BUSINESS', 'LOANS'],
-            icon: 'Briefcase'
+            icon: 'TrendingUp',
+            bannerImage: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop'
         }
     ];
 
     for (const promo of demos) {
-        await createOffer(promo);
+        // Check if a similar offer already exists to avoid duplicates, but update if images are missing
+        const match = existing.find(o => o.type === promo.type);
+        if (!match) {
+            await createOffer(promo);
+        } else if (!match.bannerImage) {
+            await updateOffer(match.id, { bannerImage: promo.bannerImage, title: promo.title });
+        }
     }
 }

@@ -20,7 +20,7 @@ export const AtmCardVisual: React.FC<AtmCardVisualProps> = ({ customerName, mask
                         <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center border border-white/20">
                             <CreditCard size={16} className="text-[#FFB81C]" />
                         </div>
-                        <span className="text-xs font-black uppercase tracking-[0.2em] italic">Federal <span className="text-[#FFB81C]">Trust</span></span>
+                        <span className="text-xs font-black uppercase tracking-[0.2em] italic">PSI Federal <span className="text-[#FFB81C]">CU</span></span>
                     </div>
                     <Wifi size={24} className="text-white/20 group-hover:text-white/60 transition" />
                 </div>
