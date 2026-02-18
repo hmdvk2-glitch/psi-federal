@@ -22,7 +22,7 @@ const HeroCarousel: React.FC<HeroCarouselProps> = ({ onLoginClick }) => {
     const prevSlide = () => setCurrent((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
 
     return (
-        <div className="relative h-[85vh] w-full overflow-hidden bg-black group">
+        <div className="relative h-[85vh] w-full overflow-hidden bg-slate-900 group">
             <AnimatePresence mode='wait'>
                 <motion.div
                     key={current}
@@ -39,12 +39,12 @@ const HeroCarousel: React.FC<HeroCarouselProps> = ({ onLoginClick }) => {
                         loading={current === 0 ? "eager" : "lazy"}
                     />
                     <div
-                        className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"
-                        style={{ opacity: heroSlides[current].overlayOpacity + 0.2 }}
+                        className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/40 to-transparent z-10"
+                        style={{ opacity: heroSlides[current].overlayOpacity + 0.3 }}
                     />
 
                     <div className={`absolute inset-0 flex items-center p-6 md:p-20 ${heroSlides[current].alignment === 'left' ? 'justify-start' :
-                            heroSlides[current].alignment === 'right' ? 'justify-end' : 'justify-center'
+                        heroSlides[current].alignment === 'right' ? 'justify-end' : 'justify-center'
                         }`}>
                         <div className={`max-w-4xl text-white space-y-8 ${heroSlides[current].alignment === 'center' ? 'text-center' : 'text-left'
                             }`}>

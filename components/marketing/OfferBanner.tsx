@@ -12,9 +12,9 @@ export const OfferBanner: React.FC<OfferBannerProps> = ({ offer, onClaim }) => {
         <div className="relative w-full rounded-[40px] overflow-hidden shadow-2xl group min-h-[400px] flex items-center">
             {/* Background with Gradient and Pattern */}
             <div className="absolute inset-0 bg-[#001D4D]">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#001D4D] via-[#002D72]/80 to-transparent z-10"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#001D4D] via-[#001D4D]/70 to-transparent z-10"></div>
                 {offer.bannerImage ? (
-                    <img src={offer.bannerImage} alt={offer.title} className="w-full h-full object-cover" />
+                    <img src={offer.bannerImage} alt={offer.title} className="w-full h-full object-cover relative z-0" />
                 ) : (
                     <div className="w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-400/20 via-transparent to-transparent"></div>
                 )}

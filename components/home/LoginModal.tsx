@@ -142,7 +142,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, isAdmin
 
                     {!isAdminMode && (
                         <p className="text-center mt-10 text-xs font-bold text-slate-400">
-                            Not a member? <a href="#" className="text-[#002D72] hover:underline">Join Federal Trust today.</a>
+                            Not a member? <a href="#" className="text-[#002D72] hover:underline">Join PSI Federal CU today.</a>
                         </p>
                     )}
                 </div>
