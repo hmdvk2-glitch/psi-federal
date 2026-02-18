@@ -57,11 +57,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onLoginClick, setView }) => {
                         <div className="flex gap-6 text-[13px] font-bold text-slate-700">
                             {[
                                 { name: 'Home', view: 'HOME' },
+                                { name: 'Personal', view: 'PERSONAL' },
                                 { name: 'Savings', view: 'SAVINGS' },
                                 { name: 'Cards', view: 'CARDS' },
                                 { name: 'Loans', view: 'LOANS' },
                                 { name: 'Business', view: 'BUSINESS' },
-                                { name: 'Membership', view: 'MEMBERSHIP' }
+                                { name: 'Membership', view: 'MEMBERSHIP' },
+                                { name: 'Mobile App', view: 'MOBILE' },
+                                { name: 'Help', view: 'SUPPORT' }
                             ].map((item) => (
                                 <button
                                     key={item.name}
@@ -95,11 +98,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onLoginClick, setView }) => {
                     <div className="flex flex-col gap-4 mb-6">
                         {[
                             { name: 'Home', view: 'HOME' },
+                            { name: 'Personal Banking', view: 'PERSONAL' },
                             { name: 'Checking & Savings', view: 'SAVINGS' },
                             { name: 'Credit Cards', view: 'CARDS' },
                             { name: 'Personal Loans', view: 'LOANS' },
                             { name: 'Business Banking', view: 'BUSINESS' },
-                            { name: 'Membership', view: 'MEMBERSHIP' }
+                            { name: 'Membership', view: 'MEMBERSHIP' },
+                            { name: 'Digital Banking', view: 'MOBILE' },
+                            { name: 'Support Center', view: 'SUPPORT' }
                         ].map((item) => (
                             <button
                                 key={item.name}

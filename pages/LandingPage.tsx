@@ -54,9 +54,12 @@ export const LandingPage: React.FC = () => {
                 {currentView === 'LOANS' && <BankingView channel="LOANS" title="Personal & Mortgage Loans" onClaim={handleClaimOffer} />}
                 {currentView === 'BUSINESS' && <BankingView channel="BUSINESS" title="Business Banking Solutions" onClaim={handleClaimOffer} />}
                 {currentView === 'MEMBERSHIP' && <BankingView channel="MEMBERSHIP" title="Membership & Eligibility" onClaim={handleClaimOffer} />}
+                {currentView === 'PERSONAL' && <BankingView channel="PERSONAL" title="Personal Banking Funnel" onClaim={handleClaimOffer} />}
+                {currentView === 'MOBILE' && <BankingView channel="MOBILE" title="Digital & Mobile Banking" onClaim={handleClaimOffer} />}
+                {currentView === 'SUPPORT' && <BankingView channel="SUPPORT" title="Support & Help Center" onClaim={handleClaimOffer} />}
 
                 {/* Shared Sections */}
-                {currentView === 'HOME' && (
+                {(currentView === 'HOME' || currentView === 'PERSONAL') && (
                     <>
                         <TrustSection />
                         <MobilePromoSection />

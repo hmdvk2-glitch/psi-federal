@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Target, BarChart3, Megaphone, Trash2, Plus, Users, Calendar, ArrowUpRight, TrendingUp } from 'lucide-react';
-import { getOffers, getLeads, deleteOffer, updateOffer } from '../../src/lib/marketingService';
+import { getOffers, getLeads, deleteOffer, updateOffer, createOffer } from '../../src/lib/marketingService';
 import { Offer, Lead } from '../../types/marketing';
 
 export const MarketingManager: React.FC = () => {
@@ -12,10 +12,31 @@ export const MarketingManager: React.FC = () => {
         refreshData();
     }, []);
 
+    const [showCreateForm, setShowCreateForm] = useState(false);
+    const [newOffer, setNewOffer] = useState<Partial<Offer>>({
+        type: 'WELCOME_BONUS',
+        status: 'ACTIVE',
+        pageChannels: ['HOME'],
+        icon: 'Gift'
+    });
+
     const refreshData = async () => {
         const [o, l] = await Promise.all([getOffers(), getLeads()]);
         setOffers(o);
         setLeads(l);
+    };
+
+    const handleCreateOffer = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const payload = {
+            ...newOffer,
+            startDate: new Date().toISOString(),
+            endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        } as Omit<Offer, 'id' | 'createdAt' | 'updatedAt'>;
+
+        await createOffer(payload);
+        setShowCreateForm(false);
+        refreshData();
     };
 
     const handleDeleteOffer = async (id: string) => {
@@ -24,6 +45,60 @@ export const MarketingManager: React.FC = () => {
             refreshData();
         }
     };
+
+    if (showCreateForm) {
+        return (
+            <div className="bg-slate-50 p-8 rounded-3xl animate-in zoom-in-95 h-full overflow-y-auto">
+                <div className="flex justify-between items-center mb-8">
+                    <h3 className="text-2xl font-black text-[#0B2E4F]">Launch New Campaign</h3>
+                    <button onClick={() => setShowCreateForm(false)} className="text-slate-400 hover:text-red-500 transition"><Trash2 /></button>
+                </div>
+                <form onSubmit={handleCreateOffer} className="grid grid-cols-2 gap-6">
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest pl-1">Offer Title</label>
+                        <input className="w-full p-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-[#0B2E4F]"
+                            placeholder="e.g. ₦50k Welcome Bonus" required
+                            onChange={e => setNewOffer({ ...newOffer, title: e.target.value })} />
+                    </div>
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest pl-1">Value Highlight</label>
+                        <input className="w-full p-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-[#0B2E4F]"
+                            placeholder="e.g. 18% APY" required
+                            onChange={e => setNewOffer({ ...newOffer, value: e.target.value })} />
+                    </div>
+                    <div className="col-span-2 space-y-1">
+                        <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest pl-1">Description</label>
+                        <textarea className="w-full p-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-[#0B2E4F] min-h-[80px]"
+                            placeholder="Hook your audience with premium benefits..." required
+                            onChange={e => setNewOffer({ ...newOffer, description: e.target.value })} />
+                    </div>
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest pl-1">Target View</label>
+                        <select className="w-full p-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-[#0B2E4F]"
+                            onChange={e => setNewOffer({ ...newOffer, pageChannels: [e.target.value as any] })}>
+                            <option value="HOME">Homepage</option>
+                            <option value="SAVINGS">Savings</option>
+                            <option value="LOANS">Loans</option>
+                            <option value="CARDS">Cards</option>
+                            <option value="BUSINESS">Business</option>
+                        </select>
+                    </div>
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest pl-1">CTA Destination</label>
+                        <select className="w-full p-3 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-[#0B2E4F]"
+                            onChange={e => setNewOffer({ ...newOffer, ctaDestination: e.target.value, ctaText: 'Activate Offer' })}>
+                            <option value="ACCOUNT_FORM">Account Opening</option>
+                            <option value="LOAN_FORM">Loan App</option>
+                            <option value="BUSINESS_FORM">Business Lead</option>
+                        </select>
+                    </div>
+                    <button type="submit" className="col-span-2 py-4 bg-[#0B2E4F] text-white font-black rounded-2xl shadow-xl hover:scale-[1.02] transition-all">
+                        Deploy Real-time Campaign
+                    </button>
+                </form>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col h-full animate-in fade-in duration-300">
@@ -91,7 +166,7 @@ export const MarketingManager: React.FC = () => {
                     <div className="space-y-4">
                         <div className="flex justify-between items-center mb-4">
                             <h4 className="font-black text-[#0B2E4F] uppercase tracking-widest text-sm">Active Campaigns</h4>
-                            <button className="flex items-center gap-2 px-3 py-1.5 bg-[#0B2E4F] text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:scale-105 transition-all">
+                            <button onClick={() => setShowCreateForm(true)} className="flex items-center gap-2 px-3 py-1.5 bg-[#0B2E4F] text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:scale-105 transition-all">
                                 <Plus size={14} /> Create Offer
                             </button>
                         </div>
