@@ -17,7 +17,7 @@ export const heroSlides: HeroSlide[] = [
         image: "/media/hero/family-going-adventure-together.jpg",
         eyebrow: "Financial Freedom",
         headline: "Your Journey Starts Here",
-        subtext: "Experience banking that moves as fast as you do with PSI Federal's advanced digital solutions.",
+        subtext: "Experience banking that moves as fast as you do with PSI Federal CU's advanced digital solutions.",
         ctaPrimary: { text: "Get Started", link: "/register" },
         ctaSecondary: { text: "Learn More", link: "/about" },
         alignment: "center",

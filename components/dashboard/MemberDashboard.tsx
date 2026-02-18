@@ -53,7 +53,7 @@ export const MemberDashboard: React.FC = () => {
                         <div className="bg-white p-1.5 rounded-lg text-[#002D72]">
                             <BarChart3 size={20} strokeWidth={3} />
                         </div>
-                        <span className="font-black uppercase tracking-tighter text-xl italic">Federal <span className="text-blue-300">Trust</span></span>
+                        <span className="font-black uppercase tracking-tighter text-xl italic">PSI Federal <span className="text-blue-300">CU</span></span>
                     </div>
 
                     <div className="flex items-center gap-4 lg:gap-8">

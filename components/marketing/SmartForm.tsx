@@ -152,7 +152,8 @@ export const SmartForm: React.FC<SmartFormProps> = ({ offer, onClose }) => {
                 <div className="p-4 bg-slate-50 rounded-2xl flex items-start gap-4 border border-slate-100">
                     <ShieldCheck className="text-[#0A1F44] mt-0.5 shrink-0" size={20} />
                     <div className="text-[10px] text-slate-500 font-medium leading-relaxed uppercase tracking-tighter">
-                        PSI Federal Trust is licensed by the Central Bank and insured by the NDIC up to $500k.
+                        PSI Federal CU is NCUA insured up to $250,000.
+                        Headquarters: P.O. Box 5930, Midlothian, Virginia 23112 | 800-366-
                         By submitting, you agree to our Terms of Service and Privacy Policy.
                         Identity verification (KYC/BVN) is required for all applications.
                     </div>

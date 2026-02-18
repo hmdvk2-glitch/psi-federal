@@ -17,11 +17,14 @@ export const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
                                 <BarChart3 size={24} strokeWidth={3} />
                             </div>
                             <h2 className="text-2xl font-black tracking-tighter uppercase italic">
-                                Federal <span className="text-blue-400">Trust</span>
+                                PSI Federal <span className="text-blue-400">CU</span>
                             </h2>
                         </div>
                         <p className="text-blue-100/60 font-medium max-w-sm leading-relaxed">
-                            A mirrored simulation of a world-class federal credit union experience. Committed to financial clarity and member empowerment.
+                            PSI Federal CU is committed to financial clarity and member empowerment. <br /><br />
+                            <strong>Headquarters:</strong><br />
+                            P.O. Box 5930, Midlothian, Virginia 23112<br />
+                            Phone: 800-366-
                         </p>
                         <div className="flex gap-4">
                             {[Facebook, Twitter, Instagram, Youtube].map((Icon, idx) => (
@@ -66,7 +69,7 @@ export const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
 
                 <div className="pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-8">
                     <div className="text-[10px] font-bold text-blue-100/40 uppercase tracking-[0.2em] text-center md:text-left">
-                        © 2026 Federal Trust Credit Union Mirror. <br className="md:hidden" /> Insured by NCUA. Equal Housing Lender.
+                        © 2026 PSI Federal CU. <br className="md:hidden" /> Insured by NCUA. Equal Housing Lender.
                     </div>
 
                     <div className="flex items-center gap-6">

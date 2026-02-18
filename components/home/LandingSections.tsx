@@ -62,7 +62,7 @@ export const MobilePromoSection = () => (
             <div className="text-white space-y-8 order-1 lg:order-2">
                 <h2 className="text-6xl font-black italic tracking-tighter leading-none uppercase">Banking without <br /><span className="text-blue-400">Boundaries</span>.</h2>
                 <p className="text-blue-100/60 text-xl font-medium leading-relaxed max-w-lg">
-                    Manage your assets with the most advanced mobile banking core. Biometric security, instant lead activation, and zero-fee transfers.
+                    Manage your assets with the most advanced mobile core from PSI Federal CU. Biometric security, instant lead activation, and zero-fee transfers.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 pt-10">
                     <AppStoreButton platform="App Store" />

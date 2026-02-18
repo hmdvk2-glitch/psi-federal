@@ -46,9 +46,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onLoginClick, setView }) => {
                         </div>
                         <div>
                             <h1 className="text-xl font-black text-[#002D72] leading-none tracking-tighter uppercase italic">
-                                Federal <span className="text-[#004A99]">Trust</span>
+                                PSI Federal <span className="text-[#004A99]">CU</span>
                             </h1>
-                            <p className="text-[9px] font-bold text-slate-400 tracking-[0.2em] uppercase">Credit Union Mirror</p>
+                            <p className="text-[9px] font-bold text-slate-400 tracking-[0.2em] uppercase">Premier Federal Credit Union</p>
                         </div>
                     </div>
 
